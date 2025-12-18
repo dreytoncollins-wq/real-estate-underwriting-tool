@@ -261,6 +261,13 @@ html = r"""<!DOCTYPE html>
         <div class="pill">Risk: <strong id="hdrRisk">—</strong></div>
       </div>
       <div class="actions">
+        <!-- Inputs/Outputs mode toggle -->
+<div class="mode-toggle" style="display:flex; gap:8px; align-items:center; margin-right:12px;">
+  <button id="btnModeInputs" type="button" class="btn btn-secondary">Inputs</button>
+  <button id="btnModeOutputs" type="button" class="btn btn-secondary">Outputs</button>
+  <span id="modeBadge" style="font-size:12px; opacity:.8;">Mode: Inputs</span>
+</div>
+
         <button class="btn" id="btnRecalc">Recalculate</button>
         <button class="btn" id="btnSave">Save</button>
         <button class="btn" id="btnExport">Export JSON</button>
@@ -3266,6 +3273,74 @@ function boot(){
 }
 
 boot();
+  <script>
+/* ===== Inputs vs Outputs Mode ===== */
+(function () {
+  function letterFromLabel(text) {
+    const m = String(text || "").trim().match(/^([A-O])\s*\./i);
+    return m ? m[1].toUpperCase() : null;
+  }
+
+  function isInputsLetter(letter) {
+    // A–H = Inputs, I–O = Outputs
+    if (!letter) return true;
+    return letter.charCodeAt(0) <= "H".charCodeAt(0);
+  }
+
+  function setMode(mode) {
+    const isInputs = mode === "inputs";
+
+    // Badge + button styling
+    const badge = document.getElementById("modeBadge");
+    const bIn = document.getElementById("btnModeInputs");
+    const bOut = document.getElementById("btnModeOutputs");
+    if (badge) badge.textContent = "Mode: " + (isInputs ? "Inputs" : "Outputs");
+    if (bIn && bOut) {
+      bIn.classList.toggle("active", isInputs);
+      bOut.classList.toggle("active", !isInputs);
+    }
+
+    // Sidebar: hide/show buttons based on A–H vs I–O
+    const sidebar = document.querySelector("aside") || document.querySelector(".sidebar") || document.body;
+    const navButtons = sidebar.querySelectorAll("button, a");
+    navButtons.forEach((el) => {
+      const t = (el.textContent || "").trim();
+      const L = letterFromLabel(t);
+      if (!L) return;
+      const show = isInputs ? isInputsLetter(L) : !isInputsLetter(L);
+      el.style.display = show ? "" : "none";
+    });
+
+    // Main content: hide/show sections based on their first heading (A.–O.)
+    // This works if your sections contain an H2/H3 like "A. Deal Setup"
+    const sections = document.querySelectorAll("section, .section, .page, .panel");
+    sections.forEach((sec) => {
+      const h = sec.querySelector("h1,h2,h3,h4");
+      const L = letterFromLabel(h ? h.textContent : "");
+      if (!L) return;
+      const show = isInputs ? isInputsLetter(L) : !isInputsLetter(L);
+      sec.style.display = show ? "" : "none";
+    });
+
+    // Persist
+    try { localStorage.setItem("uo_mode", mode); } catch (e) {}
+  }
+
+  // Wire up buttons
+  document.addEventListener("DOMContentLoaded", function () {
+    const bIn = document.getElementById("btnModeInputs");
+    const bOut = document.getElementById("btnModeOutputs");
+
+    if (bIn) bIn.addEventListener("click", () => setMode("inputs"));
+    if (bOut) bOut.addEventListener("click", () => setMode("outputs"));
+
+    let saved = "inputs";
+    try { saved = localStorage.getItem("uo_mode") || "inputs"; } catch (e) {}
+    setMode(saved);
+  });
+})();
+</script>
+
 </script>
 
 </body>
