@@ -1461,18 +1461,31 @@ function boot(){
 boot();
 /* ===== Inputs vs Outputs Mode ===== */
 (function () {
-  function letterFromLabel(text) {
-    const m = String(text || "").trim().match(/^([A-O])\s*\./i);
-    return m ? m[1].toUpperCase() : null;
-  }
+  const MODE_KEY = "uo_mode";
 
-  function isInputsLetter(letter) {
-    // A–H = Inputs, I–O = Outputs
-    if (!letter) return true;
-    return letter.charCodeAt(0) <= "H".charCodeAt(0);
-  }
+  const INPUT_PAGES = new Set([
+    "p_deal",
+    "p_structure",
+    "p_sources",
+    "p_property",
+    "p_hist",
+    "p_proforma",
+    "p_construction",
+    "p_sponsor",
+    "p_global",
+    "p_stress",
+    "p_legal",
+    "p_rating",
+    "p_conditions"
+  ]);
+
+  const OUTPUT_PAGES = new Set([
+    "p_outputs",
+    "p_feedback"
+  ]);
 
   function setMode(mode) {
+    mode = (mode === "outputs") ? "outputs" : "inputs";
     const isInputs = mode === "inputs";
 
     // Badge + button styling
@@ -1480,38 +1493,40 @@ boot();
     const bIn = document.getElementById("btnModeInputs");
     const bOut = document.getElementById("btnModeOutputs");
     if (badge) badge.textContent = "Mode: " + (isInputs ? "Inputs" : "Outputs");
-    if (bIn && bOut) {
-      bIn.classList.toggle("active", isInputs);
-      bOut.classList.toggle("active", !isInputs);
+    if (bIn) bIn.classList.toggle("active", isInputs);
+    if (bOut) bOut.classList.toggle("active", !isInputs);
+
+    // Sidebar: hide/show ONLY the real page nav buttons
+    document.querySelectorAll("#nav button[data-page]").forEach((btn) => {
+      const pageId = btn.getAttribute("data-page");
+      const show = isInputs ? INPUT_PAGES.has(pageId) : OUTPUT_PAGES.has(pageId);
+      btn.style.display = show ? "" : "none";
+      btn.classList.remove("active");
+    });
+
+    // Pages: hide/show by ID
+    document.querySelectorAll("section.page").forEach((sec) => {
+      const show = isInputs ? INPUT_PAGES.has(sec.id) : OUTPUT_PAGES.has(sec.id);
+      sec.style.display = show ? "" : "none";
+      sec.classList.remove("active");
+    });
+
+    // Force a valid page visible in this mode
+    const target = isInputs ? "p_deal" : "p_outputs";
+    const btn = document.querySelector(`#nav button[data-page="${target}"]`);
+    if (btn) {
+      btn.classList.add("active");
+    }
+    const page = document.getElementById(target);
+    if (page) {
+      page.classList.add("active");
+      page.style.display = "";
     }
 
-    // Sidebar: hide/show buttons based on A–H vs I–O
-    const sidebar = document.querySelector("aside") || document.querySelector(".sidebar") || document.body;
-    const navButtons = sidebar.querySelectorAll("button, a");
-    navButtons.forEach((el) => {
-      const t = (el.textContent || "").trim();
-      const L = letterFromLabel(t);
-      if (!L) return;
-      const show = isInputs ? isInputsLetter(L) : !isInputsLetter(L);
-      el.style.display = show ? "" : "none";
-    });
-
-    // Main content: hide/show sections based on their first heading (A.–O.)
-    // This works if your sections contain an H2/H3 like "A. Deal Setup"
-    const sections = document.querySelectorAll("section, .section, .page, .panel");
-    sections.forEach((sec) => {
-      const h = sec.querySelector("h1,h2,h3,h4");
-      const L = letterFromLabel(h ? h.textContent : "");
-      if (!L) return;
-      const show = isInputs ? isInputsLetter(L) : !isInputsLetter(L);
-      sec.style.display = show ? "" : "none";
-    });
-
     // Persist
-    try { localStorage.setItem("uo_mode", mode); } catch (e) {}
+    try { localStorage.setItem(MODE_KEY, mode); } catch (e) {}
   }
 
-  // Wire up buttons
   document.addEventListener("DOMContentLoaded", function () {
     const bIn = document.getElementById("btnModeInputs");
     const bOut = document.getElementById("btnModeOutputs");
@@ -1520,7 +1535,7 @@ boot();
     if (bOut) bOut.addEventListener("click", () => setMode("outputs"));
 
     let saved = "inputs";
-    try { saved = localStorage.getItem("uo_mode") || "inputs"; } catch (e) {}
+    try { saved = localStorage.getItem(MODE_KEY) || "inputs"; } catch (e) {}
     setMode(saved);
   });
 })();
