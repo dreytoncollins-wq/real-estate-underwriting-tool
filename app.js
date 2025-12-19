@@ -1523,24 +1523,7 @@ boot();
       btn.classList.remove("active");
     });
 
-    // Pages: hide/show by ID
-    document.querySelectorAll("section.page").forEach((sec) => {
-      const show = isInputs ? INPUT_PAGES.has(sec.id) : OUTPUT_PAGES.has(sec.id);
-      sec.style.display = show ? "" : "none";
-      sec.classList.remove("active");
-    });
-
-    // Force a valid page visible in this mode
-    const target = isInputs ? "p_deal" : "p_outputs";
-    const btn = document.querySelector(`#nav button[data-page="${target}"]`);
-    if (btn) {
-      btn.classList.add("active");
-    }
-    const page = document.getElementById(target);
-    if (page) {
-      page.classList.add("active");
-      page.style.display = "";
-    }
+     if (!document.querySelector("section.page.active")) showPage(isInputs ? "p_deal" : "p_outputs");
 
     // Persist
     try { localStorage.setItem(MODE_KEY, mode); } catch (e) {}
