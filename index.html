@@ -56,15 +56,20 @@
 
   <!-- MAIN -->
   <main class="main">
-    <!-- PRINT HEADER (only shows when printing) -->
-<div class="printHeader printOnly">
+    <!-- PRINT HEADER (only visible when printing) -->
+<div class="printOnly printHeader">
   <div class="printHeaderLeft">
-    <div class="printLogo" aria-label="Company Logo"></div>
+    <div class="printLogo" aria-label="Company logo"></div>
     <div class="printBrand">
       <div class="printCompany">Underwriting Platform</div>
       <div class="printSub">Real Estate–Backed Private Credit</div>
     </div>
   </div>
+  <div class="printHeaderRight">
+    <div>Deal: <strong id="printDeal">—</strong></div>
+    <div>Date: <strong id="printDate">—</strong></div>
+  </div>
+</div>
   <div class="printHeaderRight">
     <div><span class="muted">Deal:</span> <strong id="printDeal">—</strong></div>
     <div><span class="muted">Date:</span> <strong id="printDate">—</strong></div>
