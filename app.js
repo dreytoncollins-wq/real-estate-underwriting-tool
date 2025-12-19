@@ -314,6 +314,14 @@ function calc(){
   $("hdrDeal").textContent = deal;
   $("hdrProd").textContent = productLabel(prod);
 
+     /* ===== Print Header Sync ===== */
+  if ($("printDeal")) {
+    $("printDeal").textContent = deal;
+  }
+  if ($("printDate")) {
+    $("printDate").textContent = $("uwDate").value || "—";
+  }
+
   // Ensure source loan default mirrors loan amount
   if(safeNum($("srcLoan").value)===0 && safeNum($("loanAmount").value)>0){
     $("srcLoan").value = $("loanAmount").value;
