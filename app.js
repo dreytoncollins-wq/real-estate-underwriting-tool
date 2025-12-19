@@ -15,7 +15,14 @@ const fmt$ = (n)=> {
 const fmtPct = (x,dp=2)=> (safeNum(x)).toFixed(dp) + "%";
 const fmtX = (x,dp=2)=> (safeNum(x)).toFixed(dp) + "×";
 const todayISO = ()=> new Date().toISOString().slice(0,10);
-function escapeHtml(s){ return String(s||"").replace(/[&<>"]/g, c=>({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;" }[c])); }
+function escapeHtml(s){
+  return String(s ?? "").replace(/[&<>"]/g, (c)=>({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "\"": "&quot;"
+  }[c]));
+}
 
 function pmt(ratePerPeriod, nper, pv){
   const r=ratePerPeriod;
