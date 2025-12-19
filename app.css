@@ -198,3 +198,153 @@
       .kpi{background:white}
       .table th,.table td{border-bottom:1px solid #ccc}
     }
+/* =======================
+   BRAND THE APP BY LOGO
+   ======================= */
+
+:root{
+  /* Set these to match your logo palette */
+  --brand-ink: #0f172a;
+  --brand-accent: #2563eb;
+  --brand-muted: rgba(15,23,42,.65);
+  --brand-border: rgba(15,23,42,.12);
+}
+
+/* Sidebar logo + print logo use the same file */
+.logo,
+.printLogo{
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: url("./assets/Logo.png") center/contain no-repeat;
+  /* if png: background: url("./assets/logo.png") center/contain no-repeat; */
+}
+
+/* Make app feel “built around” the logo colors */
+.brand h1{ color: var(--brand-ink); }
+.sidebar .chip{
+  background: rgba(37,99,235,.10);
+  border: 1px solid rgba(37,99,235,.18);
+  color: var(--brand-ink);
+}
+
+.btn{
+  border: 1px solid var(--brand-border);
+}
+.btn:not(.danger){
+  background: white;
+}
+.btn:not(.danger):hover{
+  border-color: rgba(37,99,235,.35);
+}
+
+/* Optional: accent a few key UI elements */
+.pill{
+  border: 1px solid var(--brand-border);
+}
+.pill strong{ color: var(--brand-ink); }
+
+/* =======================
+   PRINT: CREDIT MEMO LOOK
+   ======================= */
+
+.printOnly{ display: none !important; }
+
+@media print {
+
+  /* Use clean print typography */
+  html, body{
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* Kill UI chrome already tagged */
+  .noPrint{ display: none !important; }
+
+  /* Show print header */
+  .printOnly{ display: block !important; }
+
+  /* Print header fixed on every page */
+  .printHeader{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 16px;
+    border-bottom: 1px solid #ddd;
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    z-index: 9999;
+  }
+
+  .printHeaderLeft{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .printBrand .printCompany{
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: .2px;
+  }
+  .printBrand .printSub{
+    font-size: 11px;
+    color: #444;
+    margin-top: 2px;
+  }
+  .printHeaderRight{
+    font-size: 11px;
+    text-align: right;
+    color: #111;
+    line-height: 1.35;
+  }
+
+  /* Push content below fixed header */
+  .main{
+    padding-top: 72px !important;
+  }
+
+  /* Make outputs print cleanly */
+  .card{
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  h2{
+    page-break-after: avoid;
+  }
+
+  /* Avoid splitting KPI blocks and tables across pages */
+  .kpiGrid, .table, .warnbox, .badbox, .callout{
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Force a page break before Full Memo so it starts clean */
+  #memo{
+    break-before: page;
+    page-break-before: always;
+  }
+
+  /* Optional watermark */
+  body::before{
+    content: "CONFIDENTIAL";
+    position: fixed;
+    top: 45%;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 72px;
+    font-weight: 800;
+    color: rgba(0,0,0,.06);
+    transform: rotate(-18deg);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Ensure content prints above watermark */
+  .main, .printHeader{ position: relative; z-index: 1; }
+}
