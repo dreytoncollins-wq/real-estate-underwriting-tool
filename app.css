@@ -262,27 +262,6 @@ input:focus, select:focus, textarea:focus{
 
 .printOnly{display:none !important;}
 
-@media print{
-  /* Hide app chrome */
-  .sidebar,.actions,.noPrint{display:none !important;}
-
-  /* Show print-only items (header) */
-  .printOnly{display:block !important;}
-
-  /* Clean print typography + background */
-  html, body{
-    background:#fff !important;
-    color:#000 !important;
-  }
-
-  /* Push content below fixed header */
-  .main{
-    max-width:none;
-    margin:0;
-    padding:72px 18px 18px !important;
-    width:100%;
-  }
-
   /* Fixed header on every page */
   .printHeader{
     position:fixed;
