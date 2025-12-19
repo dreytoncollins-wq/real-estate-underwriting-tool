@@ -344,14 +344,103 @@ input:focus, select:focus, textarea:focus{
   /* Ensure content prints above watermark */
   .main, .printHeader{ position:relative; z-index:1; }
 }
-/* ===== PRINT OVERRIDES: force Outputs pages visible even if JS hid them inline ===== */
-@media print {
-  /* Show ONLY Outputs pages */
-  section.page { display: none !important; }
-  section.page#p_outputs,
-  section.page#p_feedback { display: block !important; }
+/* =======================
+   PRINT: CREDIT MEMO LOOK
+   ======================= */
 
-  /* Ensure outputs cards actually show */
-  #p_outputs .card,
-  #p_feedback .card { display: block !important; }
+.printOnly{display:none !important;}
+
+@media print{
+  .sidebar,.actions,.noPrint{display:none !important;}
+  .printOnly{display:block !important;}
+
+  html, body{
+    background:#fff !important;
+    color:#000 !important;
+  }
+
+  .main{
+    max-width:none !important;
+    margin:0 !important;
+    padding:72px 18px 18px !important;
+    width:100% !important;
+  }
+
+  .printHeader{
+    position:fixed;
+    top:0; left:0; right:0;
+    padding:12px 16px;
+    border-bottom:1px solid #ddd;
+    background:#fff;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+    z-index:9999;
+  }
+  .printHeaderLeft{display:flex;align-items:center;gap:12px;}
+  .printBrand .printCompany{
+    font-size:14px;
+    font-weight:800;
+    letter-spacing:.3px;
+    color:#000;
+  }
+  .printBrand .printSub{
+    font-size:11px;
+    color:#444;
+    margin-top:2px;
+  }
+  .printHeaderRight{
+    font-size:11px;
+    text-align:right;
+    color:#111;
+    line-height:1.35;
+  }
+
+  .card{
+    box-shadow:none !important;
+    border:1px solid #ddd !important;
+    background:#fff !important;
+    border-radius:10px !important;
+  }
+
+  input,select,textarea{
+    border:1px solid #ccc !important;
+    background:#fff !important;
+    color:#000 !important;
+  }
+
+  .kpi{
+    background:#fff !important;
+    border:1px solid #e5e5e5 !important;
+  }
+  .table th,.table td{border-bottom:1px solid #ddd !important;}
+  .table th{color:#333 !important;}
+
+  .kpiGrid, .table, .warnbox, .badbox, .callout{
+    break-inside:avoid;
+    page-break-inside:avoid;
+  }
+
+  #memo{
+    break-before:page;
+    page-break-before:always;
+  }
+
+  body::before{
+    content:"CONFIDENTIAL";
+    position:fixed;
+    top:45%;
+    left:0; right:0;
+    text-align:center;
+    font-size:72px;
+    font-weight:800;
+    color:rgba(0,0,0,.06);
+    transform:rotate(-18deg);
+    z-index:0;
+    pointer-events:none;
+  }
+
+  .main, .printHeader{ position:relative; z-index:1; }
 }
+
