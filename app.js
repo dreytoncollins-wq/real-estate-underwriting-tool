@@ -1409,7 +1409,18 @@ function wire(){
   $("btnExport").addEventListener("click", exportJSON);
   $("btnImport").addEventListener("click", importJSON);
   $("btnClear").addEventListener("click", clearAll);
-  $("btnPrint").addEventListener("click", ()=>{ showPage("p_outputs"); setTimeout(()=>window.print(), 150); });
+  $("btnPrint").addEventListener("click", () => {
+  // 1) Switch to Outputs mode (uses your existing buttons)
+  document.getElementById("btnModeOutputs")?.click();
+
+  // 2) Activate Outputs page
+  showPage("p_outputs");
+
+  // 3) Allow DOM + mode visibility to update
+  setTimeout(() => {
+    window.print();
+  }, 120);
+});
 
   // Tables
   $("addRR").addEventListener("click", addRR);
