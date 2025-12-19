@@ -10,1637 +10,1802 @@
 
   <!-- Optional: keep this ONLY for small inline overrides -->
   <style>
-    /* put small overrides here if needed */
+    /* small overrides here if needed */
   </style>
 </head>
+
 <body>
-<div class="app">
-  <!-- SIDEBAR NAV -->
-  <aside class="sidebar noPrint">
-    <div class="brand">
-      <div class="logo" aria-label="Company Logo"></div>
-      <div>
-        <h1>Underwriting Platform</h1>
-        <div class="sub">Bank-style discipline for private credit</div>
+  <div class="app">
+    <!-- SIDEBAR NAV -->
+    <aside class="sidebar noPrint">
+      <div class="brand">
+        <div class="logo" aria-label="Company Logo"></div>
+        <div>
+          <h1>Underwriting Platform</h1>
+          <div class="sub">Bank-style discipline for private credit</div>
+        </div>
       </div>
-    </div>
 
-    <div class="nav" id="nav">
-      <button data-page="p_deal" class="active">A. Deal Setup <span class="chip">Inputs</span></button>
-      <button data-page="p_structure">B. Loan Structure & Pricing <span class="chip">Inputs</span></button>
-      <button data-page="p_sources">C. Sources & Uses <span class="chip">Inputs</span></button>
-      <button data-page="p_property">D. Property & Market <span class="chip">Inputs</span></button>
-      <button data-page="p_hist">E. Historical Ops (T‑12) <span class="chip">Inputs</span></button>
-      <button data-page="p_proforma">F. Pro Forma (Core) <span class="chip">Inputs</span></button>
-      <button data-page="p_construction">G. Construction / Value‑Add <span class="chip">Inputs</span></button>
-      <button data-page="p_sponsor">H. Sponsor / Guarantor Spread <span class="chip">Inputs</span></button>
-      <button data-page="p_global">I. Global Cash Flow (Portfolio) <span class="chip">Inputs</span></button>
-      <button data-page="p_stress">J. Stress / Downside <span class="chip">Inputs</span></button>
-      <button data-page="p_legal">K. Collateral & Legal <span class="chip">Inputs</span></button>
-      <button data-page="p_rating">L. Risk Rating <span class="chip">Policy</span></button>
-      <button data-page="p_conditions">M. Conditions & Monitoring <span class="chip">Policy</span></button>
-      <button data-page="p_outputs">N. Outputs (Summary & Memo) <span class="chip">Outputs</span></button>
-      <button data-page="p_feedback">O. Underwriter Feedback <span class="chip">Improve</span></button>
-    </div>
-
-    <div class="hr"></div>
-    <div class="small">
-      <div class="callout">
-        <strong>Workflow:</strong> Complete A→M inputs. Outputs update live. Use Export JSON for file-level audit trail.
+      <div class="nav" id="nav">
+        <button data-page="p_deal" class="active">A. Deal Setup <span class="chip">Inputs</span></button>
+        <button data-page="p_structure">B. Loan Structure & Pricing <span class="chip">Inputs</span></button>
+        <button data-page="p_sources">C. Sources & Uses <span class="chip">Inputs</span></button>
+        <button data-page="p_property">D. Property & Market <span class="chip">Inputs</span></button>
+        <button data-page="p_hist">E. Historical Ops (T-12) <span class="chip">Inputs</span></button>
+        <button data-page="p_proforma">F. Pro Forma (Core) <span class="chip">Inputs</span></button>
+        <button data-page="p_construction">G. Construction / Value-Add <span class="chip">Inputs</span></button>
+        <button data-page="p_sponsor">H. Sponsor / Guarantor Spread <span class="chip">Inputs</span></button>
+        <button data-page="p_global">I. Global Cash Flow (Portfolio) <span class="chip">Inputs</span></button>
+        <button data-page="p_stress">J. Stress / Downside <span class="chip">Inputs</span></button>
+        <button data-page="p_legal">K. Collateral & Legal <span class="chip">Inputs</span></button>
+        <button data-page="p_rating">L. Risk Rating <span class="chip">Policy</span></button>
+        <button data-page="p_conditions">M. Conditions & Monitoring <span class="chip">Policy</span></button>
+        <button data-page="p_outputs">N. Outputs (Summary & Memo) <span class="chip">Outputs</span></button>
+        <button data-page="p_feedback">O. Underwriter Feedback <span class="chip">Improve</span></button>
       </div>
-      <div class="footerNote">
-        This tool is conservative by default; tighten assumptions rather than “optimizing” outcomes.
-      </div>
-    </div>
-  </aside>
 
-  <!-- MAIN -->
-  <main class="main">
-    <!-- PRINT HEADER (only visible when printing) -->
-<div class="printOnly printHeader">
-  <div class="printHeaderLeft">
-    <div class="printLogo" aria-label="Company logo"></div>
-    <div class="printBrand">
-      <div class="printCompany">Underwriting Platform</div>
-      <div class="printSub">Real Estate–Backed Private Credit</div>
-    </div>
+      <div class="hr"></div>
+
+      <div class="small">
+        <div class="callout">
+          <strong>Workflow:</strong> Complete A→M inputs. Outputs update live. Use Export JSON for file-level audit trail.
+        </div>
+        <div class="footerNote">
+          This tool is conservative by default; tighten assumptions rather than “optimizing” outcomes.
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <!-- PRINT HEADER (only visible when printing) -->
+      <div class="printOnly printHeader">
+        <div class="printHeaderLeft">
+          <div class="printLogo" aria-label="Company logo"></div>
+          <div class="printBrand">
+            <div class="printCompany">Underwriting Platform</div>
+            <div class="printSub">Real Estate–Backed Private Credit</div>
+          </div>
+        </div>
+        <div class="printHeaderRight">
+          <div>Deal: <strong id="printDeal">—</strong></div>
+          <div>Date: <strong id="printDate">—</strong></div>
+        </div>
+      </div>
+
+      <!-- TOPBAR -->
+      <div class="topbar noPrint">
+        <div class="dealmeta">
+          <div class="pill">Deal: <strong id="hdrDeal">—</strong></div>
+          <div class="pill">Product: <strong id="hdrProd">—</strong></div>
+          <div class="pill">Rec: <strong id="hdrRec">—</strong></div>
+          <div class="pill">Risk: <strong id="hdrRisk">—</strong></div>
+        </div>
+
+        <div class="actions">
+          <!-- Inputs/Outputs mode toggle -->
+          <div class="mode-toggle" style="display:flex; gap:8px; align-items:center; margin-right:12px;">
+            <button id="btnModeInputs" type="button" class="btn btn-secondary">Inputs</button>
+            <button id="btnModeOutputs" type="button" class="btn btn-secondary">Outputs</button>
+            <span id="modeBadge" style="font-size:12px; opacity:.8;">Mode: Inputs</span>
+          </div>
+
+          <button class="btn" id="btnRecalc" type="button">Recalculate</button>
+          <button class="btn" id="btnSave" type="button">Save</button>
+          <button class="btn" id="btnExport" type="button">Export JSON</button>
+          <button class="btn" id="btnImport" type="button">Import JSON</button>
+          <button class="btn danger" id="btnClear" type="button">Clear</button>
+          <button class="btn" id="btnPrint" type="button">Print Credit Summary</button>
+        </div>
+      </div>
+
+      <!-- PAGES -->
+      <section class="page active" id="p_deal">
+        <div class="card">
+          <h2>A. Deal Setup</h2>
+          <p><strong>Purpose:</strong> Establish the underwriting file, borrower identity, and high-level deal context so all downstream calculations and memo outputs are properly labeled and auditable.</p>
+
+          <div class="grid2">
+            <div>
+              <h3>Deal Identification</h3>
+
+              <div class="row">
+                <div>
+                  <label>Deal Name / Property</label>
+                  <input id="dealName" placeholder="e.g., 8509 Western Hills Blvd | Bridge Refi" />
+                  <div class="hint">Used on every output and exported JSON file name.</div>
+                </div>
+                <div>
+                  <label>Internal Deal ID</label>
+                  <input id="dealId" placeholder="e.g., 151-2025-123" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Underwriter</label>
+                  <input id="underwriter" placeholder="Name / initials" />
+                </div>
+                <div>
+                  <label>Date Underwritten</label>
+                  <input id="uwDate" type="date" />
+                </div>
+              </div>
+
+              <label>Borrower Entity Name</label>
+              <input id="borrowerEntity" placeholder="Borrower LLC / SPV name" />
+
+              <div class="row">
+                <div>
+                  <label>State of Formation</label>
+                  <input id="borrowerState" placeholder="TX" />
+                </div>
+                <div>
+                  <label>Entity Type</label>
+                  <select id="entityType">
+                    <option>LLC</option>
+                    <option>LP</option>
+                    <option>Corporation</option>
+                    <option>Trust</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <label>Guarantors (comma-separated)</label>
+              <input id="guarantors" placeholder="Name 1; Name 2; ..." />
+
+              <div class="row">
+                <div>
+                  <label>Loan Product</label>
+                  <select id="loanProduct">
+                    <option value="bridge">Bridge (Transitional)</option>
+                    <option value="fixflip">Fix-and-Flip</option>
+                    <option value="construction">Ground-Up Construction</option>
+                    <option value="commercial_bridge">Commercial Bridge</option>
+                    <option value="land">Land Acquisition</option>
+                    <option value="second_lien">Second Lien / Mezz</option>
+                    <option value="dscr">DSCR / Investment Property</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Recourse Type</label>
+                  <select id="recourse">
+                    <option value="full">Full Recourse</option>
+                    <option value="limited">Limited Recourse / Bad-Boy</option>
+                    <option value="non">Non-Recourse</option>
+                  </select>
+                </div>
+              </div>
+
+              <label>Loan Purpose</label>
+              <select id="loanPurpose">
+                <option>Acquisition</option>
+                <option>Cash-Out Refinance</option>
+                <option>Rate/Term Refinance</option>
+                <option>Construction</option>
+                <option>Rehab / Value-Add</option>
+                <option>Bridge to Sale</option>
+                <option>Bridge to Permanent Financing</option>
+                <option>Other</option>
+              </select>
+
+              <label>Transaction Narrative (credit-committee ready)</label>
+              <textarea id="txNarr" placeholder="Describe the request, collateral, business plan, and why this loan exists now. Keep neutral and factual."></textarea>
+
+              <div class="warnbox">
+                <strong>Institutional standard:</strong> If the narrative cannot be stated clearly in 5–8 sentences (purpose, collateral, plan, exit, risks), it is typically not ready for approval.
+              </div>
+            </div>
+
+            <div>
+              <h3>Policy / Admin</h3>
+
+              <div class="row">
+                <div>
+                  <label>Target Closing Date</label>
+                  <input id="closeDate" type="date" />
+                </div>
+                <div>
+                  <label>Pipeline Stage</label>
+                  <select id="stage">
+                    <option>Screening</option>
+                    <option>Pre-Underwrite</option>
+                    <option>Full Underwrite</option>
+                    <option>Credit Committee</option>
+                    <option>Approved</option>
+                    <option>Closed</option>
+                    <option>Declined</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Warehouse / Investor Facility</label>
+                  <input id="facility" placeholder="e.g., Warehouse Line A" />
+                </div>
+                <div>
+                  <label>Facility Funding %</label>
+                  <input id="cofPctFunded" type="number" min="0" max="100" step="0.1" value="80" />
+                  <div class="hint">Portion of principal subject to cost-of-funds.</div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Cost of Funds (% annual)</label>
+                  <input id="cofRate" type="number" min="0" step="0.01" value="8.00" />
+                </div>
+                <div>
+                  <label>Target Lender ROA (% over term)</label>
+                  <input id="targetROA" type="number" min="0" step="0.1" value="10.0" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Target CoC (on lender equity, % over term)</label>
+                  <input id="targetCoC" type="number" min="0" step="0.1" value="18.0" />
+                </div>
+                <div>
+                  <label>Minimum DSCR Policy (stabilized)</label>
+                  <input id="policyMinDSCR" type="number" min="0" step="0.01" value="1.20" />
+                </div>
+              </div>
+
+              <div class="callout">
+                <strong>How to use:</strong> This tool will flag metrics under your policy thresholds and suggest conditions / structure tightening.
+              </div>
+
+              <div class="hr"></div>
+
+              <h3>Quick Deal Completeness</h3>
+              <div class="kpiGrid" id="kpiCompleteness"></div>
+
+              <div class="footerNote">
+                Tip: Complete the “Core 6” (loan amount, value, DS assumptions, sponsor liquidity, exit, diligence) before spending time refining projections.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="p_structure">
+        <div class="card">
+          <h2>B. Loan Structure & Pricing</h2>
+          <p><strong>Purpose:</strong> Define legal and economic terms (rate, amortization, fees, reserves, lien position). This drives lender economics, debt service, DSCR, and exit feasibility.</p>
+
+          <div class="grid2">
+            <div>
+              <h3>Core Terms</h3>
+
+              <div class="row">
+                <div>
+                  <label>Requested Loan Amount ($)</label>
+                  <input id="loanAmount" type="number" min="0" step="1000" value="0" />
+                </div>
+                <div>
+                  <label>Interest Type</label>
+                  <select id="interestType">
+                    <option value="fixed">Fixed</option>
+                    <option value="floating">Floating</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Note Rate (% annual)</label>
+                  <input id="noteRate" type="number" min="0" step="0.01" value="12.00" />
+                </div>
+                <div>
+                  <label>Index / Spread (if floating)</label>
+                  <input id="indexSpread" placeholder="e.g., SOFR + 6.50%" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Term (months)</label>
+                  <input id="termMonths" type="number" min="1" step="1" value="12" />
+                </div>
+                <div>
+                  <label>Interest-Only Months</label>
+                  <input id="ioMonths" type="number" min="0" step="1" value="12" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Amortization (years) (if amortizing)</label>
+                  <input id="amortYears" type="number" min="0" step="1" value="30" />
+                </div>
+                <div>
+                  <label>Balloon at Maturity</label>
+                  <select id="balloon">
+                    <option value="yes">Yes</option>
+                    <option value="no">No (fully amortizing)</option>
+                  </select>
+                </div>
+              </div>
+
+              <h3>Fees & Economics</h3>
+
+              <div class="row">
+                <div>
+                  <label>Origination Points (% of loan)</label>
+                  <input id="origPoints" type="number" min="0" step="0.01" value="2.00" />
+                </div>
+                <div>
+                  <label>Other Fees ($)</label>
+                  <input id="otherFees" type="number" min="0" step="100" value="0" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Exit Fee ($) (optional)</label>
+                  <input id="exitFee" type="number" min="0" step="500" value="0" />
+                </div>
+                <div>
+                  <label>Extension Fee (% of loan) (optional)</label>
+                  <input id="extFeePct" type="number" min="0" step="0.01" value="0" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Default Interest (% add-on)</label>
+                  <input id="defaultAdd" type="number" min="0" step="0.25" value="5.00" />
+                </div>
+                <div>
+                  <label>Late Fee (% of payment)</label>
+                  <input id="lateFeePct" type="number" min="0" step="0.1" value="5.0" />
+                </div>
+              </div>
+
+              <div class="callout">
+                <strong>Interpretation:</strong> For bridge/value-add, pricing alone does not solve structure risk. If leverage is high, require (i) tighter LTC, (ii) reserves, (iii) PG, (iv) covenants/cash management, and (v) realistic exit.
+              </div>
+            </div>
+
+            <div>
+              <h3>Lien Position & Payments</h3>
+
+              <div class="row">
+                <div>
+                  <label>Lien Position</label>
+                  <select id="lienPos">
+                    <option value="1st">1st Lien</option>
+                    <option value="2nd">2nd Lien</option>
+                    <option value="mezz">Mezz / Equity-like</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Senior Debt Ahead ($)</label>
+                  <input id="seniorAhead" type="number" min="0" step="1000" value="0" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Interest Reserve ($ held back)</label>
+                  <input id="interestReserve" type="number" min="0" step="1000" value="0" />
+                </div>
+                <div>
+                  <label>Reserve Coverage Target (months)</label>
+                  <input id="reserveMonths" type="number" min="0" step="1" value="6" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Escrows (Taxes/Insurance)</label>
+                  <select id="escrows">
+                    <option value="none">None</option>
+                    <option value="ti">T&amp;I Escrow</option>
+                    <option value="full">Full Cash Management</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Cash Management Trigger DSCR</label>
+                  <input id="cmTrigger" type="number" min="0" step="0.01" value="1.10" />
+                </div>
+              </div>
+
+              <div class="hr"></div>
+
+              <h3>Calculated Payments (Audit-Friendly)</h3>
+              <div class="kpiGrid" id="kpiPayments"></div>
+
+              <div class="hr"></div>
+
+              <h3>Lender Economics (Over Term)</h3>
+              <div class="kpiGrid" id="kpiEconomics"></div>
+
+              <div class="warnbox">
+                <strong>Common failure point:</strong> Underwriting the exit based on “best case” and not verifying takeout requirements (DSCR, LTV, sponsor liquidity, seasoning, and market cap rates).
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="p_sources">
+        <div class="card">
+          <h2>C. Sources & Uses</h2>
+          <p><strong>Purpose:</strong> Validate sponsor equity at risk, ensure the budget is complete, identify gaps, and compute LTC and contingency adequacy. For construction/value-add, the budget is a primary credit document.</p>
+
+          <div class="grid2">
+            <div>
+              <h3>Uses (Budget Summary)</h3>
+
+              <div class="row">
+                <div>
+                  <label>Purchase Price ($)</label>
+                  <input id="purchasePrice" type="number" min="0" step="1000" value="0" />
+                </div>
+                <div>
+                  <label>Closing Costs (Borrower) ($)</label>
+                  <input id="borClosing" type="number" min="0" step="500" value="0" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Rehab / Construction Hard Costs ($)</label>
+                  <input id="rehabBudget" type="number" min="0" step="1000" value="0" />
+                </div>
+                <div>
+                  <label>Soft Costs ($) (A&amp;E, permits, etc.)</label>
+                  <input id="softCosts" type="number" min="0" step="1000" value="0" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Contingency (% of hard costs)</label>
+                  <input id="contPct" type="number" min="0" step="0.1" value="10.0" />
+                </div>
+                <div>
+                  <label>Interest Carry (est.) ($) (if not reserved)</label>
+                  <input id="estCarry" type="number" min="0" step="1000" value="0" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Leasing / TI / LC ($) (if applicable)</label>
+                  <input id="leasingCosts" type="number" min="0" step="1000" value="0" />
+                </div>
+                <div>
+                  <label>CapEx Reserve ($/yr) (stabilized)</label>
+                  <input id="capexReserve" type="number" min="0" step="100" value="0" />
+                </div>
+              </div>
+
+              <label>Total Uses ($) (override if needed)</label>
+              <input id="totalUses" type="number" min="0" step="1000" value="0" />
+              <div class="hint">If blank/zero, tool computes a total from line items above.</div>
+
+              <div class="hr"></div>
+
+              <h3>Sources</h3>
+
+              <div class="row">
+                <div>
+                  <label>Loan Proceeds ($)</label>
+                  <input id="srcLoan" type="number" min="0" step="1000" value="0" />
+                  <div class="hint">Default = requested loan amount (set on page B).</div>
+                </div>
+                <div>
+                  <label>Sponsor Equity ($)</label>
+                  <input id="sponsorEquity" type="number" min="0" step="1000" value="0" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Other Financing ($)</label>
+                  <input id="otherFin" type="number" min="0" step="1000" value="0" />
+                </div>
+                <div>
+                  <label>Cash at Risk (%)</label>
+                  <input id="equityAtRiskPct" type="number" min="0" step="0.1" value="100" />
+                  <div class="hint">If equity is borrowed or reimbursed, reduce accordingly.</div>
+                </div>
+              </div>
+
+              <div class="callout">
+                <strong>Interpretation:</strong> Sponsor equity that is not “real cash at risk” is not loss-absorbing capital. Underwrite it accordingly.
+              </div>
+            </div>
+
+            <div>
+              <h3>Budget Controls (Construction/Value-Add)</h3>
+
+              <div class="row">
+                <div>
+                  <label>Draw Method</label>
+                  <select id="drawMethod">
+                    <option value="reimb">Reimbursement (post-work)</option>
+                    <option value="adv">Advance (pre-work)</option>
+                    <option value="hybrid">Hybrid</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Inspection Frequency</label>
+                  <select id="inspectFreq">
+                    <option>Per Draw</option>
+                    <option>Monthly</option>
+                    <option>Milestones</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>GC Contract Type</label>
+                  <select id="gcType">
+                    <option>Not Provided</option>
+                    <option>GMP</option>
+                    <option>Fixed Price</option>
+                    <option>Cost Plus</option>
+                    <option>Owner-Builder</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Contingency Holder</label>
+                  <select id="contHolder">
+                    <option>Lender Controlled</option>
+                    <option>Borrower Controlled</option>
+                    <option>Shared</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Permits in Hand?</label>
+                  <select id="permits">
+                    <option value="no">No</option>
+                    <option value="partial">Partially</option>
+                    <option value="yes">Yes</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Construction Start Date</label>
+                  <input id="startDate" type="date" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Construction Duration (months)</label>
+                  <input id="constMonths" type="number" min="0" step="1" value="0" />
+                </div>
+                <div>
+                  <label>Lease-Up Duration (months)</label>
+                  <input id="leaseupMonths" type="number" min="0" step="1" value="0" />
+                </div>
+              </div>
+
+              <div class="hr"></div>
+
+              <h3>Computed Gaps & Policy Flags</h3>
+              <div class="kpiGrid" id="kpiSU"></div>
+
+              <div class="badbox" id="gapBox" style="display:none"></div>
+
+              <div class="footerNote">
+                If Sources ≠ Uses: fix the gap before proceeding. “Assumed” money is not a source.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="p_property">
+        <div class="card">
+          <h2>D. Property & Market</h2>
+          <p><strong>Purpose:</strong> Document collateral characteristics, assess market liquidity, and support rent/sale/exit assumptions. For private credit, marketability and time-to-exit are core downside drivers.</p>
+
+          <div class="grid2">
+            <div>
+              <h3>Collateral Description</h3>
+
+              <div class="row">
+                <div>
+                  <label>Property Address</label>
+                  <input id="propAddr" placeholder="Street, City, State" />
+                </div>
+                <div>
+                  <label>County / Submarket</label>
+                  <input id="submarket" placeholder="e.g., Tarrant / West FW" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Asset Type</label>
+                  <select id="assetType">
+                    <option value="sfr">SFR / 1-4</option>
+                    <option value="multifamily">Multifamily</option>
+                    <option value="office">Office</option>
+                    <option value="retail">Retail</option>
+                    <option value="industrial">Industrial</option>
+                    <option value="mixed">Mixed-Use</option>
+                    <option value="land">Land</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Occupancy Status</label>
+                  <select id="occupancy">
+                    <option value="vacant">Vacant</option>
+                    <option value="part">Partially Occupied</option>
+                    <option value="inplace">Stabilized / In-Place</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Year Built / Renovated</label>
+                  <input id="yearBuilt" placeholder="e.g., 1998 / 2022" />
+                </div>
+                <div>
+                  <label>Size (SF / Units)</label>
+                  <input id="size" placeholder="e.g., 12,500 SF or 24 units" />
+                </div>
+              </div>
+
+              <label>Physical Condition (neutral)</label>
+              <textarea id="condition" placeholder="Deferred maintenance, major systems, roof/HVAC, code issues, functional obsolescence..."></textarea>
+
+              <label>Location Strengths / Weaknesses</label>
+              <textarea id="locNotes" placeholder="Visibility, access, tenant base, competing supply, crime perception, barriers to entry..."></textarea>
+
+              <div class="callout">
+                <strong>Interpretation:</strong> If collateral has “thin buyer pool” characteristics (special purpose, tertiary market, heavy deferred maintenance), require additional cushion (lower leverage, more reserves, stronger PG).
+              </div>
+            </div>
+
+            <div>
+              <h3>Valuation & Market Inputs</h3>
+
+              <div class="row">
+                <div>
+                  <label>As-Is Value (Appraisal/BPO) ($)</label>
+                  <input id="asIsValue" type="number" min="0" step="1000" value="0" />
+                </div>
+                <div>
+                  <label>Stabilized/ARV Value ($)</label>
+                  <input id="arvValue" type="number" min="0" step="1000" value="0" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Appraisal Date</label>
+                  <input id="appDate" type="date" />
+                </div>
+                <div>
+                  <label>Appraiser / BPO Provider</label>
+                  <input id="appProv" placeholder="Firm name" />
+                </div>
+              </div>
+
+              <h3>Market & Liquidity</h3>
+
+              <div class="row">
+                <div>
+                  <label>Market Vacancy Trend</label>
+                  <select id="mktVacTrend">
+                    <option>Improving</option>
+                    <option>Stable</option>
+                    <option>Softening</option>
+                    <option>Unknown</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Supply Pipeline Risk</label>
+                  <select id="pipeline">
+                    <option>Low</option>
+                    <option>Moderate</option>
+                    <option>High</option>
+                    <option>Unknown</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Liquidity Score (1 best – 5 worst)</label>
+                  <input id="liqScore" type="number" min="1" max="5" step="1" value="3" />
+                </div>
+                <div>
+                  <label>Time-to-Sell Assumption (months)</label>
+                  <input id="tts" type="number" min="0" step="1" value="6" />
+                </div>
+              </div>
+
+              <label>Comparable Rent Notes</label>
+              <textarea id="rentComps" placeholder="Summarize rent comps, concessions, tenant quality, and support for pro forma rents."></textarea>
+
+              <label>Comparable Sale Notes</label>
+              <textarea id="saleComps" placeholder="Summarize sales comps supporting as-is and exit assumptions; cap rates; buyer pool."></textarea>
+
+              <div class="hr"></div>
+
+              <h3>Market Risk Scoring (Auto)</h3>
+              <div class="kpiGrid" id="kpiMarket"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="p_hist">
+        <div class="card">
+          <h2>E. Historical Operating Performance (T-12 / In-Place)</h2>
+          <p><strong>Purpose:</strong> Establish a defensible baseline NOI and identify normalization adjustments. Historical statements are often “optimistic”; normalize to market vacancy, management, and reserves.</p>
+
+          <div class="grid2">
+            <div>
+              <h3>Income</h3>
+
+              <div class="row">
+                <div>
+                  <label>Gross Scheduled Rent ($/yr)</label>
+                  <input id="grossRent" type="number" min="0" step="1000" value="0" />
+                </div>
+                <div>
+                  <label>Other Income ($/yr)</label>
+                  <input id="otherIncome" type="number" min="0" step="100" value="0" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Vacancy & Credit Loss (% of gross)</label>
+                  <input id="vacPct" type="number" min="0" max="100" step="0.1" value="5.0" />
+                </div>
+                <div>
+                  <label>Mgmt Fee (% of EGI) (include even if owner-managed)</label>
+                  <input id="mgmtPct" type="number" min="0" max="100" step="0.1" value="4.0" />
+                </div>
+              </div>
+
+              <h3>Operating Expenses</h3>
+
+              <div class="row">
+                <div>
+                  <label>Taxes ($/yr)</label>
+                  <input id="taxes" type="number" min="0" step="100" value="0" />
+                </div>
+                <div>
+                  <label>Insurance ($/yr)</label>
+                  <input id="insurance" type="number" min="0" step="100" value="0" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Repairs & Maintenance ($/yr)</label>
+                  <input id="repairs" type="number" min="0" step="100" value="0" />
+                </div>
+                <div>
+                  <label>Utilities ($/yr)</label>
+                  <input id="utilities" type="number" min="0" step="100" value="0" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Payroll / On-Site ($/yr)</label>
+                  <input id="payroll" type="number" min="0" step="100" value="0" />
+                </div>
+                <div>
+                  <label>Other Operating Expenses ($/yr)</label>
+                  <input id="otherOpex" type="number" min="0" step="100" value="0" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Replacement Reserves ($/yr)</label>
+                  <input id="replReserves" type="number" min="0" step="100" value="0" />
+                </div>
+                <div>
+                  <label>Normalization Adjustments ($/yr) (+ adds expense)</label>
+                  <input id="normAdj" type="number" step="100" value="0" />
+                  <div class="hint">Example: add market mgmt, increase vacancy, remove one-time income.</div>
+                </div>
+              </div>
+
+              <div class="callout">
+                <strong>Guidance:</strong> If actual vacancy is abnormally low, underwrite to market. If owner-managed, include market mgmt fee. If reserves are missing, include them.
+              </div>
+            </div>
+
+            <div>
+              <h3>Normalized NOI Output</h3>
+              <div class="kpiGrid" id="kpiHist"></div>
+
+              <div class="hr"></div>
+
+              <h3>Rent Roll (Optional – quick table)</h3>
+              <p class="small">This is a lightweight rent roll. For institutional approval, attach the actual rent roll as an exhibit; use this to sanity-check totals.</p>
+
+              <table class="table" id="rentRollTbl">
+                <thead>
+                  <tr>
+                    <th>Unit/Tenant</th>
+                    <th class="right">Rent/mo</th>
+                    <th class="right">Lease Exp</th>
+                    <th>Notes</th>
+                    <th class="right"></th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+
+              <div class="rowBtns">
+                <button class="btn" id="addRR" type="button">Add Row</button>
+                <button class="btn" id="sumRR" type="button">Update Gross Rent From Rent Roll</button>
+              </div>
+
+              <div class="footerNote">
+                If rent roll totals differ from stated income, explain the discrepancy (vacancy, free rent, bad debt, concessions, month-to-month).
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="p_proforma">
+        <div class="card">
+          <h2>F. Forward-Looking Pro Forma (Core Section)</h2>
+          <p><strong>Purpose:</strong> Underwrite stabilized performance, exit value, and takeout feasibility. Assumptions must be defensible, conservative, and supported by comps. This section drives most “true risk.”</p>
+
+          <div class="grid2">
+            <div>
+              <h3>Stabilized Income Assumptions</h3>
+
+              <div class="row">
+                <div>
+                  <label>Stabilized Gross Rent ($/yr)</label>
+                  <input id="stbGrossRent" type="number" min="0" step="1000" value="0" />
+                </div>
+                <div>
+                  <label>Stabilized Other Income ($/yr)</label>
+                  <input id="stbOtherIncome" type="number" min="0" step="100" value="0" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Stabilized Vacancy & Credit Loss (%)</label>
+                  <input id="stbVacPct" type="number" min="0" max="100" step="0.1" value="7.0" />
+                </div>
+                <div>
+                  <label>Bad Debt Allowance (% of gross) (optional)</label>
+                  <input id="badDebtPct" type="number" min="0" max="10" step="0.1" value="0.0" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Rent Growth (%/yr)</label>
+                  <input id="rentGrowth" type="number" min="-20" max="30" step="0.1" value="2.0" />
+                </div>
+                <div>
+                  <label>Expense Growth (%/yr)</label>
+                  <input id="expGrowth" type="number" min="-20" max="30" step="0.1" value="3.0" />
+                </div>
+              </div>
+
+              <h3>Stabilized Expense Assumptions</h3>
+
+              <div class="row">
+                <div>
+                  <label>Stabilized Taxes ($/yr)</label>
+                  <input id="stbTaxes" type="number" min="0" step="100" value="0" />
+                </div>
+                <div>
+                  <label>Stabilized Insurance ($/yr)</label>
+                  <input id="stbIns" type="number" min="0" step="100" value="0" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Stabilized R&M ($/yr)</label>
+                  <input id="stbRepairs" type="number" min="0" step="100" value="0" />
+                </div>
+                <div>
+                  <label>Stabilized Utilities ($/yr)</label>
+                  <input id="stbUtils" type="number" min="0" step="100" value="0" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Stabilized Other OpEx ($/yr)</label>
+                  <input id="stbOtherOpex" type="number" min="0" step="100" value="0" />
+                </div>
+                <div>
+                  <label>Replacement Reserves ($/yr)</label>
+                  <input id="stbRepl" type="number" min="0" step="100" value="0" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>CapEx Reserve ($/yr)</label>
+                  <input id="stbCapex" type="number" min="0" step="100" value="0" />
+                </div>
+                <div>
+                  <label>Mgmt Fee (% of EGI)</label>
+                  <input id="stbMgmtPct" type="number" min="0" max="100" step="0.1" value="4.0" />
+                </div>
+              </div>
+
+              <div class="callout">
+                <strong>Interpretation:</strong> Pro forma NOI must be explained. If it relies on “low vacancy + no reserves + minimal mgmt,” it is not institutional.
+              </div>
+            </div>
+
+            <div>
+              <h3>Exit & Reversion</h3>
+
+              <div class="row">
+                <div>
+                  <label>Exit Cap Rate (%)</label>
+                  <input id="exitCap" type="number" min="0" step="0.01" value="6.50" />
+                </div>
+                <div>
+                  <label>Exit Cap Buffer (bps) (added to cap for conservative exit)</label>
+                  <input id="exitCapBuffer" type="number" min="0" step="25" value="50" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Sales Costs (% of sale price)</label>
+                  <input id="saleCostPct" type="number" min="0" step="0.1" value="3.0" />
+                </div>
+                <div>
+                  <label>Time-to-Exit (months)</label>
+                  <input id="timeToExit" type="number" min="0" step="1" value="12" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Projection Horizon (years)</label>
+                  <input id="projYears" type="number" min="1" step="1" value="5" />
+                </div>
+                <div>
+                  <label>Permanent Refi Rate (% annual) (takeout)</label>
+                  <input id="takeoutRate" type="number" min="0" step="0.01" value="7.00" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Takeout Amortization (years)</label>
+                  <input id="takeoutAmort" type="number" min="1" step="1" value="30" />
+                </div>
+                <div>
+                  <label>Takeout DSCR Requirement</label>
+                  <input id="takeoutDSCR" type="number" min="0" step="0.01" value="1.25" />
+                </div>
+              </div>
+
+              <div class="hr"></div>
+
+              <h3>Pro Forma Outputs</h3>
+              <div class="kpiGrid" id="kpiPF"></div>
+
+              <div class="hr"></div>
+
+              <h3>Year-By-Year Projection</h3>
+              <div id="projWrap"></div>
+
+              <div class="footerNote">
+                Takeout feasibility is evaluated both by DSCR and by implied takeout LTV (based on market cap rate + conservative buffer).
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="p_construction">
+        <div class="card">
+          <h2>G. Construction / Value-Add / Business Plan</h2>
+          <p><strong>Purpose:</strong> Underwrite budget realism, schedule risk, and cost overrun protection. This is often where private credit losses originate (scope creep, delays, insufficient reserves).</p>
+
+          <div class="grid2">
+            <div>
+              <h3>Scope & Schedule</h3>
+
+              <div class="row">
+                <div>
+                  <label>Scope Summary</label>
+                  <textarea id="scope" placeholder="Major work items, systems, interiors/exteriors, leasing scope, TI/LC..."></textarea>
+                </div>
+                <div>
+                  <label>Schedule Narrative</label>
+                  <textarea id="scheduleNotes" placeholder="Start date, milestones, critical path, seasonality, permitting dependencies..."></textarea>
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Hard Cost / SF or Unit ($)</label>
+                  <input id="hardPer" type="number" min="0" step="1" value="0" />
+                </div>
+                <div>
+                  <label>Contingency Adequacy (Underwriter)</label>
+                  <select id="contAdeq">
+                    <option>Adequate</option>
+                    <option>Borderline</option>
+                    <option>Inadequate</option>
+                    <option>Unknown</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Contractor Experience (Underwriter)</label>
+                  <select id="gcExp">
+                    <option>Strong</option>
+                    <option>Moderate</option>
+                    <option>Weak</option>
+                    <option>Unknown</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Owner-Builder Risk</label>
+                  <select id="obRisk">
+                    <option>Low</option>
+                    <option>Moderate</option>
+                    <option>High</option>
+                    <option>Not Applicable</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="callout">
+                <strong>Controls that matter:</strong> third-party budget review, GMP or fixed contract where possible, lender-controlled contingency, and inspections with lien waivers.
+              </div>
+            </div>
+
+            <div>
+              <h3>Interest Carry & Reserve Adequacy</h3>
+              <p class="small">This section estimates interest carry over the stabilization timeline (construction + lease-up + buffer) and compares to reserves.</p>
+
+              <div class="row">
+                <div>
+                  <label>Stabilization Timeline (months)</label>
+                  <input id="stabMonths" type="number" min="0" step="1" value="0" />
+                </div>
+                <div>
+                  <label>Carry Buffer (months)</label>
+                  <input id="carryBufferMo" type="number" min="0" step="1" value="3" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Assumed Avg Utilization (% of loan)</label>
+                  <input id="avgUtilPct" type="number" min="0" max="100" step="1" value="80" />
+                </div>
+                <div>
+                  <label>Operating Deficit During Lease-Up ($/mo) (optional)</label>
+                  <input id="leaseupDef" type="number" min="0" step="100" value="0" />
+                </div>
+              </div>
+
+              <div class="kpiGrid" id="kpiCarry"></div>
+              <div class="warnbox" id="carryWarn" style="display:none"></div>
+
+              <div class="hr"></div>
+
+              <h3>Draw Schedule (Simple)</h3>
+              <p class="small">Add expected draws by month (optional). If not provided, the tool assumes even utilization.</p>
+
+              <table class="table" id="drawTbl">
+                <thead>
+                  <tr>
+                    <th class="nowrap">Month</th>
+                    <th class="right">Draw ($)</th>
+                    <th>Milestone</th>
+                    <th class="right"></th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+
+              <div class="rowBtns">
+                <button class="btn" id="addDraw" type="button">Add Draw Row</button>
+                <button class="btn" id="evenDraw" type="button">Auto-Even Draws</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="p_sponsor">
+        <div class="card">
+          <h2>H. Sponsor / Guarantor Spread (Bank-Level)</h2>
+          <p><strong>Purpose:</strong> Evaluate guarantor strength, liquidity, contingent liabilities, and capacity to support the loan through stress. Private credit differs from banks in structure flexibility, but sponsor capacity still matters.</p>
+
+          <div class="grid2">
+            <div>
+              <h3>Personal Financial Statement (Summary)</h3>
+
+              <div class="row">
+                <div>
+                  <label>Cash & Equivalents ($)</label>
+                  <input id="pfsCash" type="number" min="0" step="1000" value="0" />
+                </div>
+                <div>
+                  <label>Marketable Securities ($)</label>
+                  <input id="pfsMarket" type="number" min="0" step="1000" value="0" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Other Liquid (Retirement, etc.) ($)</label>
+                  <input id="pfsOtherLiq" type="number" min="0" step="1000" value="0" />
+                </div>
+                <div>
+                  <label>Illiquid RE Equity ($)</label>
+                  <input id="pfsReEq" type="number" min="0" step="1000" value="0" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Business Interests ($)</label>
+                  <input id="pfsBiz" type="number" min="0" step="1000" value="0" />
+                </div>
+                <div>
+                  <label>Other Assets ($)</label>
+                  <input id="pfsOther" type="number" min="0" step="1000" value="0" />
+                </div>
+              </div>
+
+              <h3>Liabilities</h3>
+
+              <div class="row">
+                <div>
+                  <label>Total Liabilities ($)</label>
+                  <input id="pfsLiab" type="number" min="0" step="1000" value="0" />
+                </div>
+                <div>
+                  <label>Contingent Liabilities ($) (PGs, lawsuits)</label>
+                  <input id="contLiab" type="number" min="0" step="1000" value="0" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Liquidity Haircut (% applied to “liquid” assets)</label>
+                  <input id="liqHaircut" type="number" min="0" max="50" step="1" value="5" />
+                </div>
+                <div>
+                  <label>RE Equity Haircut (% applied to illiquid RE)</label>
+                  <input id="reHaircut" type="number" min="0" max="80" step="5" value="25" />
+                </div>
+              </div>
+
+              <div class="callout">
+                <strong>Conservatism:</strong> Apply haircuts. Liquidity on paper is not liquidity in a workout.
+              </div>
+            </div>
+
+            <div>
+              <h3>Income & Global Support</h3>
+
+              <div class="row">
+                <div>
+                  <label>Personal Income (stable) ($/yr)</label>
+                  <input id="persIncome" type="number" min="0" step="1000" value="0" />
+                </div>
+                <div>
+                  <label>Personal Living Expenses ($/yr)</label>
+                  <input id="living" type="number" min="0" step="1000" value="0" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Other Required Debt Pmts ($/yr) (non-RE)</label>
+                  <input id="otherDebt" type="number" min="0" step="1000" value="0" />
+                </div>
+                <div>
+                  <label>Other Income Volatility</label>
+                  <select id="incomeVol">
+                    <option>Low</option>
+                    <option>Moderate</option>
+                    <option>High</option>
+                    <option>Unknown</option>
+                  </select>
+                </div>
+              </div>
+
+              <label>Sponsor Track Record (summary)</label>
+              <textarea id="track" placeholder="Past projects, realized exits, construction experience, litigation, bankruptcies, fraud checks..."></textarea>
+
+              <label>Concentration Risk Notes</label>
+              <textarea id="conc" placeholder="Tenant, geography, property type concentration; reliance on one revenue stream..."></textarea>
+
+              <div class="hr"></div>
+
+              <h3>Sponsor KPIs (Auto)</h3>
+              <div class="kpiGrid" id="kpiSponsor"></div>
+
+              <div class="warnbox" id="sponsorWarn" style="display:none"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="p_global">
+        <div class="card">
+          <h2>I. Global Cash Flow (Portfolio & Businesses)</h2>
+          <p><strong>Purpose:</strong> Calculate global DSCR and identify liquidity burn sensitivity. This helps determine whether the sponsor can carry a project through delays, vacancy shocks, or rate shocks.</p>
+
+          <div class="grid2">
+            <div>
+              <h3>Portfolio Summary Inputs</h3>
+
+              <div class="row">
+                <div>
+                  <label>Global NOI / Cash Flow Available ($/yr)</label>
+                  <input id="globalNoi" type="number" min="0" step="1000" value="0" />
+                </div>
+                <div>
+                  <label>Global Debt Service ($/yr)</label>
+                  <input id="globalDebtSvc" type="number" min="0" step="1000" value="0" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Portfolio Vacancy Sensitivity (% pts)</label>
+                  <input id="globVacSens" type="number" min="0" max="50" step="0.5" value="5" />
+                </div>
+                <div>
+                  <label>Portfolio Rate Shock (bps)</label>
+                  <input id="globRateBps" type="number" min="0" max="1000" step="25" value="200" />
+                </div>
+              </div>
+
+              <div class="callout">
+                <strong>Interpretation:</strong> A strong property DSCR is not sufficient if the sponsor’s global position is weak and relies on constant refis or thin cash flow.
+              </div>
+
+              <div class="hr"></div>
+
+              <h3>Portfolio Detail (Optional Table)</h3>
+              <p class="small">Add key properties to compute a “bottom-up” global DSCR. If you use this, keep it conservative and tie to real statements.</p>
+
+              <table class="table" id="globTbl">
+                <thead>
+                  <tr>
+                    <th>Property</th>
+                    <th class="right">NOI ($/yr)</th>
+                    <th class="right">Debt Svc ($/yr)</th>
+                    <th>Notes</th>
+                    <th class="right"></th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+
+              <div class="rowBtns">
+                <button class="btn" id="addGlob" type="button">Add Property</button>
+                <button class="btn" id="sumGlob" type="button">Set Global NOI/Debt from Table</button>
+              </div>
+            </div>
+
+            <div>
+              <h3>Global Outputs & Sensitivity</h3>
+              <div class="kpiGrid" id="kpiGlobal"></div>
+
+              <div class="hr"></div>
+
+              <h3>Sensitivity (Simple)</h3>
+              <div id="globSens"></div>
+
+              <div class="footerNote">
+                If global DSCR is weak, tighten the transaction: lower leverage, larger reserves, faster amortization, or require additional collateral.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="p_stress">
+        <div class="card">
+          <h2>J. Stress Testing & Downside Scenarios</h2>
+          <p><strong>Purpose:</strong> Explicitly quantify what goes wrong, and show whether the loan can survive (or what the loss severity looks like). Private credit should price for downside but structure for survivability.</p>
+
+          <div class="grid2">
+            <div>
+              <h3>Downside Inputs</h3>
+
+              <div class="row">
+                <div>
+                  <label>Rent Decline (% of stabilized rent)</label>
+                  <input id="stRentDown" type="number" min="0" max="60" step="0.5" value="10" />
+                </div>
+                <div>
+                  <label>Vacancy Increase (absolute % pts)</label>
+                  <input id="stVacUp" type="number" min="0" max="40" step="0.5" value="5" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Exit Cap Expansion (bps)</label>
+                  <input id="stCapBps" type="number" min="0" max="500" step="25" value="75" />
+                </div>
+                <div>
+                  <label>Rate Shock (bps)</label>
+                  <input id="stRateBps" type="number" min="0" max="1000" step="25" value="200" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Cost Overrun (% of hard costs)</label>
+                  <input id="stCostOver" type="number" min="0" max="100" step="1" value="10" />
+                </div>
+                <div>
+                  <label>Lease-Up / Execution Delay (months)</label>
+                  <input id="stDelayMo" type="number" min="0" max="36" step="1" value="3" />
+                </div>
+              </div>
+
+              <h3>Forced Sale Analysis</h3>
+
+              <div class="row">
+                <div>
+                  <label>Forced Sale Discount (% vs as-is)</label>
+                  <input id="forcedDisc" type="number" min="0" max="60" step="1" value="15" />
+                </div>
+                <div>
+                  <label>Workout Costs (% of sale)</label>
+                  <input id="workoutCost" type="number" min="0" max="20" step="0.5" value="6" />
+                </div>
+              </div>
+
+              <div class="callout">
+                <strong>Interpretation:</strong> Stress tests should reflect plausible downside (not catastrophe). If plausible downside implies principal loss, restructure.
+              </div>
+            </div>
+
+            <div>
+              <h3>Stress Outputs</h3>
+              <div class="kpiGrid" id="kpiStress"></div>
+
+              <div class="hr"></div>
+
+              <h3>Mini Sensitivity Matrix (DSCR vs Cap Rate)</h3>
+              <div id="sensMatrix"></div>
+
+              <div class="hr"></div>
+
+              <h3>Downside Narrative (Auto Draft)</h3>
+              <div class="small" id="stressNarr"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="p_legal">
+        <div class="card">
+          <h2>K. Collateral & Legal Review</h2>
+          <p><strong>Purpose:</strong> Track third-party diligence and “deal killers” (title, zoning, environmental, insurance). Credit approval should be conditioned on satisfactory diligence.</p>
+
+          <div class="grid2">
+            <div>
+              <h3>Title / Survey / Liens</h3>
+
+              <div class="row">
+                <div>
+                  <label>Title Commitment Received?</label>
+                  <select id="titleRecv">
+                    <option>No</option>
+                    <option>Yes</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Title Exceptions Acceptable?</label>
+                  <select id="titleOk">
+                    <option>Unknown</option>
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Survey Received?</label>
+                  <select id="surveyRecv">
+                    <option>No</option>
+                    <option>Yes</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Mechanics Lien Risk</label>
+                  <select id="mlRisk">
+                    <option>Low</option>
+                    <option>Moderate</option>
+                    <option>High</option>
+                    <option>Unknown</option>
+                  </select>
+                </div>
+              </div>
+
+              <label>Title / Legal Notes</label>
+              <textarea id="titleNotes" placeholder="Lien issues, easements, access, encroachments, HOA, litigation, etc."></textarea>
+
+              <h3>Zoning / Entitlements</h3>
+
+              <div class="row">
+                <div>
+                  <label>Zoning Verified?</label>
+                  <select id="zoning">
+                    <option>Unknown</option>
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Use Conforms?</label>
+                  <select id="conforming">
+                    <option>Unknown</option>
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
+                </div>
+              </div>
+
+              <label>Zoning Notes</label>
+              <textarea id="zoningNotes"></textarea>
+            </div>
+
+            <div>
+              <h3>Environmental / Insurance / Appraisal</h3>
+
+              <div class="row">
+                <div>
+                  <label>Phase I ESA Required?</label>
+                  <select id="phaseReq">
+                    <option>Unknown</option>
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Phase I Result</label>
+                  <select id="phaseRes">
+                    <option>Pending</option>
+                    <option>Clean</option>
+                    <option>RECs Identified</option>
+                    <option>Not Applicable</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Insurance Bound?</label>
+                  <select id="insBound">
+                    <option>No</option>
+                    <option>Yes</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Coverage Adequate?</label>
+                  <select id="insOk">
+                    <option>Unknown</option>
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Appraisal Reviewed?</label>
+                  <select id="appRev">
+                    <option>No</option>
+                    <option>Yes</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Appraisal Concerns?</label>
+                  <select id="appConc">
+                    <option>No</option>
+                    <option>Yes</option>
+                    <option>Unknown</option>
+                  </select>
+                </div>
+              </div>
+
+              <label>Diligence / Legal Conditions Draft</label>
+              <textarea id="legalConds" placeholder="List specific conditions: title endorsements, Phase I, zoning letter, ALTA survey, insurance requirements, etc."></textarea>
+
+              <div class="hr"></div>
+
+              <h3>Diligence Readiness</h3>
+              <div class="kpiGrid" id="kpiDiligence"></div>
+
+              <div class="warnbox" id="dilWarn" style="display:none"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="p_rating">
+        <div class="card">
+          <h2>L. Risk Rating & Credit Decision Framework</h2>
+          <p><strong>Purpose:</strong> Produce an internal rating that is repeatable, auditable, and linked to pricing/structure expectations. Adjust weights to match your internal policy.</p>
+
+          <div class="grid2">
+            <div>
+              <h3>Quantitative Weighting</h3>
+
+              <div class="row">
+                <div>
+                  <label>Weight: Leverage (LTV/LTC)</label>
+                  <input id="wLev" type="number" min="0" max="100" step="1" value="30" />
+                </div>
+                <div>
+                  <label>Weight: Cash Flow (DSCR/DY)</label>
+                  <input id="wCF" type="number" min="0" max="100" step="1" value="30" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Weight: Sponsor Strength</label>
+                  <input id="wSp" type="number" min="0" max="100" step="1" value="25" />
+                </div>
+                <div>
+                  <label>Weight: Collateral Liquidity</label>
+                  <input id="wCol" type="number" min="0" max="100" step="1" value="15" />
+                </div>
+              </div>
+
+              <div class="callout">
+                <strong>Practice:</strong> Risk rating should be stable over time and comparable across deals. Avoid “custom scoring” that only supports approval.
+              </div>
+
+              <div class="hr"></div>
+
+              <h3>Risk-Based Pricing Guidance</h3>
+              <p class="small">This is advisory only. In production, link to your pricing matrix. Here we provide a baseline spread suggestion.</p>
+              <div class="kpiGrid" id="kpiPricingGuide"></div>
+            </div>
+
+            <div>
+              <h3>Computed Rating</h3>
+              <div class="kpiGrid" id="kpiRating"></div>
+
+              <div class="hr"></div>
+
+              <h3>Committee Summary (Auto Draft)</h3>
+              <div class="small" id="ratingNarr"></div>
+
+              <div class="footerNote">
+                Ratings should be supported by exhibits: appraisal, rent roll, T-12, sponsor PFS, background check, and budget.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="p_conditions">
+        <div class="card">
+          <h2>M. Conditions, Covenants & Monitoring</h2>
+          <p><strong>Purpose:</strong> Translate underwriting findings into enforceable conditions and ongoing monitoring. The best credit decisions are “operationalized” with triggers and reporting cadence.</p>
+
+          <div class="grid2">
+            <div>
+              <h3>Pre-Funding Conditions (Core)</h3>
+              <label>Conditions (editable)</label>
+              <textarea id="conds" placeholder="Auto-populated in outputs; edit to match the deal."></textarea>
+
+              <h3>Ongoing Reporting</h3>
+
+              <div class="row">
+                <div>
+                  <label>Monthly Rent Roll?</label>
+                  <select id="monRR">
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Quarterly Financials?</label>
+                  <select id="qFin">
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Annual Borrower Financials?</label>
+                  <select id="annFin">
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Construction Reporting (if applicable)</label>
+                  <select id="constRpt">
+                    <option>Not Applicable</option>
+                    <option>Monthly</option>
+                    <option>Per Draw</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="callout">
+                <strong>Principle:</strong> If a risk is material, it should map to a covenant, reserve, control, or reporting requirement.
+              </div>
+            </div>
+
+            <div>
+              <h3>Covenants & Triggers</h3>
+
+              <div class="row">
+                <div>
+                  <label>Minimum DSCR Covenant</label>
+                  <input id="covDSCR" type="number" min="0" step="0.01" value="1.10" />
+                </div>
+                <div>
+                  <label>Max LTV Covenant (%)</label>
+                  <input id="covLTV" type="number" min="0" step="0.1" value="85.0" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label>Cash Sweep Trigger DSCR</label>
+                  <input id="sweepDSCR" type="number" min="0" step="0.01" value="1.00" />
+                </div>
+                <div>
+                  <label>Reserve Top-Up Trigger</label>
+                  <select id="topup">
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
+                </div>
+              </div>
+
+              <label>Early Warning Indicators</label>
+              <textarea id="ewi" placeholder="Examples: DSCR deterioration, occupancy drop, budget variance, lien notices, tax delinquency, sponsor liquidity decline..."></textarea>
+
+              <div class="hr"></div>
+
+              <h3>Monitoring Summary (Auto)</h3>
+              <div class="small" id="monNarr"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="p_outputs">
+        <div class="card">
+          <h2>N. Outputs (Executive Summary & Credit Memo)</h2>
+          <p><strong>Purpose:</strong> Produce committee-ready outputs: one-page summary, key metrics, risk/mitigants, and a structured memo. All outputs are derived from your inputs.</p>
+
+          <div class="grid2">
+            <div>
+              <h3>1-Page Executive Credit Summary</h3>
+              <div class="kpiGrid" id="kpiExec"></div>
+
+              <div class="hr"></div>
+
+              <div class="grid2">
+                <div>
+                  <h3>Key Risks</h3>
+                  <ul id="outRisks" class="small"></ul>
+                </div>
+                <div>
+                  <h3>Mitigants</h3>
+                  <ul id="outMitigants" class="small"></ul>
+                </div>
+              </div>
+
+              <div class="hr"></div>
+
+              <h3>Exit Strategy</h3>
+              <div class="small" id="outExit"></div>
+
+              <div class="hr"></div>
+
+              <h3>Conditions (Draft)</h3>
+              <ul id="outConds" class="small"></ul>
+            </div>
+
+            <div>
+              <h3>Full Credit Memo (Structured)</h3>
+              <div id="memo"></div>
+
+              <div class="printOnly" style="margin-top:14px">
+                <div class="small">
+                  Printed summary generated from stored inputs. Attach exhibits: rent roll, T-12, appraisal/BPO, title, insurance, budget, sponsor PFS, and exit comps.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="p_feedback">
+        <div class="card">
+          <h2>O. Underwriter Feedback & Improvement Recommendations</h2>
+          <p><strong>Purpose:</strong> Provide built-in critiques of your underwriting file quality and suggest how to strengthen it (structure, diligence, assumptions).</p>
+
+          <div class="grid2">
+            <div>
+              <h3>File Quality Flags (Auto)</h3>
+              <div id="qualityFlags"></div>
+
+              <div class="hr"></div>
+
+              <h3>How to Make This Better (Design Notes)</h3>
+              <div class="callout">
+                <ul>
+                  <li><strong>Add document uploads:</strong> In production, add a backend for storing rent rolls, T-12 PDFs, appraisal, and insurance binders, and tie each to a checklist item.</li>
+                  <li><strong>Expand global cash flow:</strong> Add a full schedule of real estate owned (SREO) with liens, rates, maturities, and DSCR per asset.</li>
+                  <li><strong>Normalize automatically:</strong> Add “market vacancy” by asset/submarket and capex/reserve benchmarks by property type.</li>
+                  <li><strong>Facility compliance:</strong> Add warehouse line covenants (max LTV, min DY, seasoning rules) and flag exceptions.</li>
+                  <li><strong>Decision log:</strong> Add a section capturing committee questions and final conditions to create a permanent audit trail.</li>
+                  <li><strong>Cash management engine:</strong> Model lockbox, waterfall, and triggers, and generate covenant tests automatically.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div>
+              <h3>Underwriter Notes</h3>
+
+              <label>Strengths</label>
+              <textarea id="uwStrengths" placeholder="List primary strengths in bank-style terms (collateral quality, liquidity, exit certainty, low leverage, etc.)."></textarea>
+
+              <label>Weaknesses</label>
+              <textarea id="uwWeaknesses" placeholder="List primary weaknesses (thin DSCR, execution risk, shallow market, sponsor liquidity, etc.)."></textarea>
+
+              <label>Key Questions for Sponsor / Borrower</label>
+              <textarea id="uwQuestions" placeholder="What needs to be answered before approval/closing?"></textarea>
+
+              <label>Committee Talking Points</label>
+              <textarea id="uwTalking" placeholder="Anticipate objections and preempt with facts/mitigants."></textarea>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
   </div>
-  <div class="printHeaderRight">
-    <div>Deal: <strong id="printDeal">—</strong></div>
-    <div>Date: <strong id="printDate">—</strong></div>
-  </div>
-</div>
-  <div class="printHeaderRight">
-    <div><span class="muted">Deal:</span> <strong id="printDeal">—</strong></div>
-    <div><span class="muted">Date:</span> <strong id="printDate">—</strong></div>
-  </div>
-</div>
-    <div class="topbar noPrint">
-      <div class="dealmeta">
-        <div class="pill">Deal: <strong id="hdrDeal">—</strong></div>
-        <div class="pill">Product: <strong id="hdrProd">—</strong></div>
-        <div class="pill">Rec: <strong id="hdrRec">—</strong></div>
-        <div class="pill">Risk: <strong id="hdrRisk">—</strong></div>
-      </div>
-      <div class="actions">
-        <!-- Inputs/Outputs mode toggle -->
-<div class="mode-toggle" style="display:flex; gap:8px; align-items:center; margin-right:12px;">
-  <button id="btnModeInputs" type="button" class="btn btn-secondary">Inputs</button>
-  <button id="btnModeOutputs" type="button" class="btn btn-secondary">Outputs</button>
-  <span id="modeBadge" style="font-size:12px; opacity:.8;">Mode: Inputs</span>
-</div>
 
-        <button class="btn" id="btnRecalc">Recalculate</button>
-        <button class="btn" id="btnSave">Save</button>
-        <button class="btn" id="btnExport">Export JSON</button>
-        <button class="btn" id="btnImport">Import JSON</button>
-        <button class="btn danger" id="btnClear">Clear</button>
-        <button class="btn" id="btnPrint">Print Credit Summary</button>
-      </div>
-    </div>
-
-    <!-- PAGES -->
-    <section class="page active" id="p_deal">
-      <div class="card">
-        <h2>A. Deal Setup</h2>
-        <p><strong>Purpose:</strong> Establish the underwriting file, borrower identity, and high-level deal context so all downstream calculations and memo outputs are properly labeled and auditable.</p>
-
-        <div class="grid2">
-          <div>
-            <h3>Deal Identification</h3>
-            <div class="row">
-              <div>
-                <label>Deal Name / Property</label>
-                <input id="dealName" placeholder="e.g., 8509 Western Hills Blvd | Bridge Refi" />
-                <div class="hint">Used on every output and exported JSON file name.</div>
-              </div>
-              <div>
-                <label>Internal Deal ID</label>
-                <input id="dealId" placeholder="e.g., 151-2025-123" />
-              </div>
-            </div>
-            <div class="row">
-              <div>
-                <label>Underwriter</label>
-                <input id="underwriter" placeholder="Name / initials" />
-              </div>
-              <div>
-                <label>Date Underwritten</label>
-                <input id="uwDate" type="date"/>
-              </div>
-            </div>
-
-            <label>Borrower Entity Name</label>
-            <input id="borrowerEntity" placeholder="Borrower LLC / SPV name" />
-
-            <div class="row">
-              <div>
-                <label>State of Formation</label>
-                <input id="borrowerState" placeholder="TX" />
-              </div>
-              <div>
-                <label>Entity Type</label>
-                <select id="entityType">
-                  <option>LLC</option><option>LP</option><option>Corporation</option><option>Trust</option><option>Other</option>
-                </select>
-              </div>
-            </div>
-
-            <label>Guarantors (comma-separated)</label>
-            <input id="guarantors" placeholder="Name 1; Name 2; ..." />
-
-            <div class="row">
-              <div>
-                <label>Loan Product</label>
-                <select id="loanProduct">
-                  <option value="bridge">Bridge (Transitional)</option>
-                  <option value="fixflip">Fix‑and‑Flip</option>
-                  <option value="construction">Ground‑Up Construction</option>
-                  <option value="commercial_bridge">Commercial Bridge</option>
-                  <option value="land">Land Acquisition</option>
-                  <option value="second_lien">Second Lien / Mezz</option>
-                  <option value="dscr">DSCR / Investment Property</option>
-                </select>
-              </div>
-              <div>
-                <label>Recourse Type</label>
-                <select id="recourse">
-                  <option value="full">Full Recourse</option>
-                  <option value="limited">Limited Recourse / Bad‑Boy</option>
-                  <option value="non">Non‑Recourse</option>
-                </select>
-              </div>
-            </div>
-
-            <label>Loan Purpose</label>
-            <select id="loanPurpose">
-              <option>Acquisition</option>
-              <option>Cash‑Out Refinance</option>
-              <option>Rate/Term Refinance</option>
-              <option>Construction</option>
-              <option>Rehab / Value‑Add</option>
-              <option>Bridge to Sale</option>
-              <option>Bridge to Permanent Financing</option>
-              <option>Other</option>
-            </select>
-
-            <label>Transaction Narrative (credit‑committee ready)</label>
-            <textarea id="txNarr" placeholder="Describe the request, collateral, business plan, and why this loan exists now. Keep neutral and factual."></textarea>
-
-            <div class="warnbox">
-              <strong>Institutional standard:</strong> If the narrative cannot be stated clearly in 5–8 sentences (purpose, collateral, plan, exit, risks), it is typically not ready for approval.
-            </div>
-          </div>
-
-          <div>
-            <h3>Policy / Admin</h3>
-            <div class="row">
-              <div>
-                <label>Target Closing Date</label>
-                <input id="closeDate" type="date"/>
-              </div>
-              <div>
-                <label>Pipeline Stage</label>
-                <select id="stage">
-                  <option>Screening</option><option>Pre‑Underwrite</option><option>Full Underwrite</option><option>Credit Committee</option><option>Approved</option><option>Closed</option><option>Declined</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Warehouse / Investor Facility</label>
-                <input id="facility" placeholder="e.g., Warehouse Line A" />
-              </div>
-              <div>
-                <label>Facility Funding %</label>
-                <input id="cofPctFunded" type="number" min="0" max="100" step="0.1" value="80"/>
-                <div class="hint">Portion of principal subject to cost-of-funds.</div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Cost of Funds (% annual)</label>
-                <input id="cofRate" type="number" min="0" step="0.01" value="8.00"/>
-              </div>
-              <div>
-                <label>Target Lender ROA (% over term)</label>
-                <input id="targetROA" type="number" min="0" step="0.1" value="10.0"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Target CoC (on lender equity, % over term)</label>
-                <input id="targetCoC" type="number" min="0" step="0.1" value="18.0"/>
-              </div>
-              <div>
-                <label>Minimum DSCR Policy (stabilized)</label>
-                <input id="policyMinDSCR" type="number" min="0" step="0.01" value="1.20"/>
-              </div>
-            </div>
-
-            <div class="callout">
-              <strong>How to use:</strong> This tool will flag metrics under your policy thresholds and suggest conditions / structure tightening.
-            </div>
-
-            <div class="hr"></div>
-
-            <h3>Quick Deal Completeness</h3>
-            <div class="kpiGrid" id="kpiCompleteness"></div>
-
-            <div class="footerNote">
-              Tip: Complete the “Core 6” (loan amount, value, DS assumptions, sponsor liquidity, exit, diligence) before spending time refining projections.
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="page" id="p_structure">
-      <div class="card">
-        <h2>B. Loan Structure & Pricing</h2>
-        <p><strong>Purpose:</strong> Define legal and economic terms (rate, amortization, fees, reserves, lien position). This drives lender economics, debt service, DSCR, and exit feasibility.</p>
-
-        <div class="grid2">
-          <div>
-            <h3>Core Terms</h3>
-            <div class="row">
-              <div>
-                <label>Requested Loan Amount ($)</label>
-                <input id="loanAmount" type="number" min="0" step="1000" value="0"/>
-              </div>
-              <div>
-                <label>Interest Type</label>
-                <select id="interestType">
-                  <option value="fixed">Fixed</option>
-                  <option value="floating">Floating</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Note Rate (% annual)</label>
-                <input id="noteRate" type="number" min="0" step="0.01" value="12.00"/>
-              </div>
-              <div>
-                <label>Index / Spread (if floating)</label>
-                <input id="indexSpread" placeholder="e.g., SOFR + 6.50%" />
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Term (months)</label>
-                <input id="termMonths" type="number" min="1" step="1" value="12"/>
-              </div>
-              <div>
-                <label>Interest‑Only Months</label>
-                <input id="ioMonths" type="number" min="0" step="1" value="12"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Amortization (years) (if amortizing)</label>
-                <input id="amortYears" type="number" min="0" step="1" value="30"/>
-              </div>
-              <div>
-                <label>Balloon at Maturity</label>
-                <select id="balloon">
-                  <option value="yes">Yes</option>
-                  <option value="no">No (fully amortizing)</option>
-                </select>
-              </div>
-            </div>
-
-            <h3>Fees & Economics</h3>
-            <div class="row">
-              <div>
-                <label>Origination Points (% of loan)</label>
-                <input id="origPoints" type="number" min="0" step="0.01" value="2.00"/>
-              </div>
-              <div>
-                <label>Other Fees ($)</label>
-                <input id="otherFees" type="number" min="0" step="100" value="0"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Exit Fee ($) (optional)</label>
-                <input id="exitFee" type="number" min="0" step="500" value="0"/>
-              </div>
-              <div>
-                <label>Extension Fee (% of loan) (optional)</label>
-                <input id="extFeePct" type="number" min="0" step="0.01" value="0"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Default Interest (% add‑on)</label>
-                <input id="defaultAdd" type="number" min="0" step="0.25" value="5.00"/>
-              </div>
-              <div>
-                <label>Late Fee (% of payment)</label>
-                <input id="lateFeePct" type="number" min="0" step="0.1" value="5.0"/>
-              </div>
-            </div>
-
-            <div class="callout">
-              <strong>Interpretation:</strong> For bridge/value‑add, pricing alone does not solve structure risk. If leverage is high, require (i) tighter LTC, (ii) reserves, (iii) PG, (iv) covenants/cash management, and (v) realistic exit.
-            </div>
-          </div>
-
-          <div>
-            <h3>Lien Position & Payments</h3>
-            <div class="row">
-              <div>
-                <label>Lien Position</label>
-                <select id="lienPos">
-                  <option value="1st">1st Lien</option>
-                  <option value="2nd">2nd Lien</option>
-                  <option value="mezz">Mezz / Equity‑like</option>
-                </select>
-              </div>
-              <div>
-                <label>Senior Debt Ahead ($)</label>
-                <input id="seniorAhead" type="number" min="0" step="1000" value="0"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Interest Reserve ($ held back)</label>
-                <input id="interestReserve" type="number" min="0" step="1000" value="0"/>
-              </div>
-              <div>
-                <label>Reserve Coverage Target (months)</label>
-                <input id="reserveMonths" type="number" min="0" step="1" value="6"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Escrows (Taxes/Insurance)</label>
-                <select id="escrows">
-                  <option value="none">None</option>
-                  <option value="ti">T&amp;I Escrow</option>
-                  <option value="full">Full Cash Management</option>
-                </select>
-              </div>
-              <div>
-                <label>Cash Management Trigger DSCR</label>
-                <input id="cmTrigger" type="number" min="0" step="0.01" value="1.10"/>
-              </div>
-            </div>
-
-            <div class="hr"></div>
-
-            <h3>Calculated Payments (Audit‑Friendly)</h3>
-            <div class="kpiGrid" id="kpiPayments"></div>
-
-            <div class="hr"></div>
-
-            <h3>Lender Economics (Over Term)</h3>
-            <div class="kpiGrid" id="kpiEconomics"></div>
-
-            <div class="warnbox">
-              <strong>Common failure point:</strong> Underwriting the exit based on “best case” and not verifying takeout requirements (DSCR, LTV, sponsor liquidity, seasoning, and market cap rates).
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="page" id="p_sources">
-      <div class="card">
-        <h2>C. Sources & Uses</h2>
-        <p><strong>Purpose:</strong> Validate sponsor equity at risk, ensure the budget is complete, identify gaps, and compute LTC and contingency adequacy. For construction/value‑add, the budget is a primary credit document.</p>
-
-        <div class="grid2">
-          <div>
-            <h3>Uses (Budget Summary)</h3>
-            <div class="row">
-              <div>
-                <label>Purchase Price ($)</label>
-                <input id="purchasePrice" type="number" min="0" step="1000" value="0"/>
-              </div>
-              <div>
-                <label>Closing Costs (Borrower) ($)</label>
-                <input id="borClosing" type="number" min="0" step="500" value="0"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Rehab / Construction Hard Costs ($)</label>
-                <input id="rehabBudget" type="number" min="0" step="1000" value="0"/>
-              </div>
-              <div>
-                <label>Soft Costs ($) (A&amp;E, permits, etc.)</label>
-                <input id="softCosts" type="number" min="0" step="1000" value="0"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Contingency (% of hard costs)</label>
-                <input id="contPct" type="number" min="0" step="0.1" value="10.0"/>
-              </div>
-              <div>
-                <label>Interest Carry (est.) ($) (if not reserved)</label>
-                <input id="estCarry" type="number" min="0" step="1000" value="0"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Leasing / TI / LC ($) (if applicable)</label>
-                <input id="leasingCosts" type="number" min="0" step="1000" value="0"/>
-              </div>
-              <div>
-                <label>CapEx Reserve ($/yr) (stabilized)</label>
-                <input id="capexReserve" type="number" min="0" step="100" value="0"/>
-              </div>
-            </div>
-
-            <label>Total Uses ($) (override if needed)</label>
-            <input id="totalUses" type="number" min="0" step="1000" value="0"/>
-            <div class="hint">If blank/zero, tool computes a total from line items above.</div>
-
-            <div class="hr"></div>
-            <h3>Sources</h3>
-            <div class="row">
-              <div>
-                <label>Loan Proceeds ($)</label>
-                <input id="srcLoan" type="number" min="0" step="1000" value="0"/>
-                <div class="hint">Default = requested loan amount (set on page B).</div>
-              </div>
-              <div>
-                <label>Sponsor Equity ($)</label>
-                <input id="sponsorEquity" type="number" min="0" step="1000" value="0"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Other Financing ($)</label>
-                <input id="otherFin" type="number" min="0" step="1000" value="0"/>
-              </div>
-              <div>
-                <label>Cash at Risk (%)</label>
-                <input id="equityAtRiskPct" type="number" min="0" step="0.1" value="100"/>
-                <div class="hint">If equity is borrowed or reimbursed, reduce accordingly.</div>
-              </div>
-            </div>
-
-            <div class="callout">
-              <strong>Interpretation:</strong> Sponsor equity that is not “real cash at risk” is not loss-absorbing capital. Underwrite it accordingly.
-            </div>
-          </div>
-
-          <div>
-            <h3>Budget Controls (Construction/Value‑Add)</h3>
-            <div class="row">
-              <div>
-                <label>Draw Method</label>
-                <select id="drawMethod">
-                  <option value="reimb">Reimbursement (post‑work)</option>
-                  <option value="adv">Advance (pre‑work)</option>
-                  <option value="hybrid">Hybrid</option>
-                </select>
-              </div>
-              <div>
-                <label>Inspection Frequency</label>
-                <select id="inspectFreq">
-                  <option>Per Draw</option><option>Monthly</option><option>Milestones</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>GC Contract Type</label>
-                <select id="gcType">
-                  <option>Not Provided</option>
-                  <option>GMP</option>
-                  <option>Fixed Price</option>
-                  <option>Cost Plus</option>
-                  <option>Owner‑Builder</option>
-                </select>
-              </div>
-              <div>
-                <label>Contingency Holder</label>
-                <select id="contHolder">
-                  <option>Lender Controlled</option>
-                  <option>Borrower Controlled</option>
-                  <option>Shared</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Permits in Hand?</label>
-                <select id="permits">
-                  <option value="no">No</option>
-                  <option value="partial">Partially</option>
-                  <option value="yes">Yes</option>
-                </select>
-              </div>
-              <div>
-                <label>Construction Start Date</label>
-                <input id="startDate" type="date"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Construction Duration (months)</label>
-                <input id="constMonths" type="number" min="0" step="1" value="0"/>
-              </div>
-              <div>
-                <label>Lease‑Up Duration (months)</label>
-                <input id="leaseupMonths" type="number" min="0" step="1" value="0"/>
-              </div>
-            </div>
-
-            <div class="hr"></div>
-            <h3>Computed Gaps & Policy Flags</h3>
-            <div class="kpiGrid" id="kpiSU"></div>
-
-            <div class="badbox" id="gapBox" style="display:none"></div>
-
-            <div class="footerNote">
-              If Sources ≠ Uses: fix the gap before proceeding. “Assumed” money is not a source.
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="page" id="p_property">
-      <div class="card">
-        <h2>D. Property & Market</h2>
-        <p><strong>Purpose:</strong> Document collateral characteristics, assess market liquidity, and support rent/sale/exit assumptions. For private credit, marketability and time-to-exit are core downside drivers.</p>
-
-        <div class="grid2">
-          <div>
-            <h3>Collateral Description</h3>
-            <div class="row">
-              <div>
-                <label>Property Address</label>
-                <input id="propAddr" placeholder="Street, City, State" />
-              </div>
-              <div>
-                <label>County / Submarket</label>
-                <input id="submarket" placeholder="e.g., Tarrant / West FW" />
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Asset Type</label>
-                <select id="assetType">
-                  <option value="sfr">SFR / 1‑4</option>
-                  <option value="multifamily">Multifamily</option>
-                  <option value="office">Office</option>
-                  <option value="retail">Retail</option>
-                  <option value="industrial">Industrial</option>
-                  <option value="mixed">Mixed‑Use</option>
-                  <option value="land">Land</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-              <div>
-                <label>Occupancy Status</label>
-                <select id="occupancy">
-                  <option value="vacant">Vacant</option>
-                  <option value="part">Partially Occupied</option>
-                  <option value="inplace">Stabilized / In‑Place</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Year Built / Renovated</label>
-                <input id="yearBuilt" placeholder="e.g., 1998 / 2022" />
-              </div>
-              <div>
-                <label>Size (SF / Units)</label>
-                <input id="size" placeholder="e.g., 12,500 SF or 24 units" />
-              </div>
-            </div>
-
-            <label>Physical Condition (neutral)</label>
-            <textarea id="condition" placeholder="Deferred maintenance, major systems, roof/HVAC, code issues, functional obsolescence..."></textarea>
-
-            <label>Location Strengths / Weaknesses</label>
-            <textarea id="locNotes" placeholder="Visibility, access, tenant base, competing supply, crime perception, barriers to entry..."></textarea>
-
-            <div class="callout">
-              <strong>Interpretation:</strong> If collateral has “thin buyer pool” characteristics (special purpose, tertiary market, heavy deferred maintenance), require additional cushion (lower leverage, more reserves, stronger PG).
-            </div>
-          </div>
-
-          <div>
-            <h3>Valuation & Market Inputs</h3>
-            <div class="row">
-              <div>
-                <label>As‑Is Value (Appraisal/BPO) ($)</label>
-                <input id="asIsValue" type="number" min="0" step="1000" value="0"/>
-              </div>
-              <div>
-                <label>Stabilized/ARV Value ($)</label>
-                <input id="arvValue" type="number" min="0" step="1000" value="0"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Appraisal Date</label>
-                <input id="appDate" type="date"/>
-              </div>
-              <div>
-                <label>Appraiser / BPO Provider</label>
-                <input id="appProv" placeholder="Firm name" />
-              </div>
-            </div>
-
-            <h3>Market & Liquidity</h3>
-            <div class="row">
-              <div>
-                <label>Market Vacancy Trend</label>
-                <select id="mktVacTrend">
-                  <option>Improving</option><option>Stable</option><option>Softening</option><option>Unknown</option>
-                </select>
-              </div>
-              <div>
-                <label>Supply Pipeline Risk</label>
-                <select id="pipeline">
-                  <option>Low</option><option>Moderate</option><option>High</option><option>Unknown</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Liquidity Score (1 best – 5 worst)</label>
-                <input id="liqScore" type="number" min="1" max="5" step="1" value="3"/>
-              </div>
-              <div>
-                <label>Time‑to‑Sell Assumption (months)</label>
-                <input id="tts" type="number" min="0" step="1" value="6"/>
-              </div>
-            </div>
-
-            <label>Comparable Rent Notes</label>
-            <textarea id="rentComps" placeholder="Summarize rent comps, concessions, tenant quality, and support for pro forma rents."></textarea>
-
-            <label>Comparable Sale Notes</label>
-            <textarea id="saleComps" placeholder="Summarize sales comps supporting as-is and exit assumptions; cap rates; buyer pool."></textarea>
-
-            <div class="hr"></div>
-            <h3>Market Risk Scoring (Auto)</h3>
-            <div class="kpiGrid" id="kpiMarket"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="page" id="p_hist">
-      <div class="card">
-        <h2>E. Historical Operating Performance (T‑12 / In‑Place)</h2>
-        <p><strong>Purpose:</strong> Establish a defensible baseline NOI and identify normalization adjustments. Historical statements are often “optimistic”; normalize to market vacancy, management, and reserves.</p>
-
-        <div class="grid2">
-          <div>
-            <h3>Income</h3>
-            <div class="row">
-              <div>
-                <label>Gross Scheduled Rent ($/yr)</label>
-                <input id="grossRent" type="number" min="0" step="1000" value="0"/>
-              </div>
-              <div>
-                <label>Other Income ($/yr)</label>
-                <input id="otherIncome" type="number" min="0" step="100" value="0"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Vacancy & Credit Loss (% of gross)</label>
-                <input id="vacPct" type="number" min="0" max="100" step="0.1" value="5.0"/>
-              </div>
-              <div>
-                <label>Mgmt Fee (% of EGI) (include even if owner‑managed)</label>
-                <input id="mgmtPct" type="number" min="0" max="100" step="0.1" value="4.0"/>
-              </div>
-            </div>
-
-            <h3>Operating Expenses</h3>
-            <div class="row">
-              <div>
-                <label>Taxes ($/yr)</label>
-                <input id="taxes" type="number" min="0" step="100" value="0"/>
-              </div>
-              <div>
-                <label>Insurance ($/yr)</label>
-                <input id="insurance" type="number" min="0" step="100" value="0"/>
-              </div>
-            </div>
-            <div class="row">
-              <div>
-                <label>Repairs & Maintenance ($/yr)</label>
-                <input id="repairs" type="number" min="0" step="100" value="0"/>
-              </div>
-              <div>
-                <label>Utilities ($/yr)</label>
-                <input id="utilities" type="number" min="0" step="100" value="0"/>
-              </div>
-            </div>
-            <div class="row">
-              <div>
-                <label>Payroll / On‑Site ($/yr)</label>
-                <input id="payroll" type="number" min="0" step="100" value="0"/>
-              </div>
-              <div>
-                <label>Other Operating Expenses ($/yr)</label>
-                <input id="otherOpex" type="number" min="0" step="100" value="0"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Replacement Reserves ($/yr)</label>
-                <input id="replReserves" type="number" min="0" step="100" value="0"/>
-              </div>
-              <div>
-                <label>Normalization Adjustments ($/yr) (+ adds expense)</label>
-                <input id="normAdj" type="number" step="100" value="0"/>
-                <div class="hint">Example: add market mgmt, increase vacancy, remove one‑time income.</div>
-              </div>
-            </div>
-
-            <div class="callout">
-              <strong>Guidance:</strong> If actual vacancy is abnormally low, underwrite to market. If owner‑managed, include market mgmt fee. If reserves are missing, include them.
-            </div>
-          </div>
-
-          <div>
-            <h3>Normalized NOI Output</h3>
-            <div class="kpiGrid" id="kpiHist"></div>
-
-            <div class="hr"></div>
-            <h3>Rent Roll (Optional – quick table)</h3>
-            <p class="small">This is a lightweight rent roll. For institutional approval, attach the actual rent roll as an exhibit; use this to sanity-check totals.</p>
-            <table class="table" id="rentRollTbl">
-              <thead>
-                <tr><th>Unit/Tenant</th><th class="right">Rent/mo</th><th class="right">Lease Exp</th><th>Notes</th><th class="right"> </th></tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-            <div class="rowBtns">
-              <button class="btn" id="addRR">Add Row</button>
-              <button class="btn" id="sumRR">Update Gross Rent From Rent Roll</button>
-            </div>
-
-            <div class="footerNote">
-              If rent roll totals differ from stated income, explain the discrepancy (vacancy, free rent, bad debt, concessions, month-to-month).
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="page" id="p_proforma">
-      <div class="card">
-        <h2>F. Forward‑Looking Pro Forma (Core Section)</h2>
-        <p><strong>Purpose:</strong> Underwrite stabilized performance, exit value, and takeout feasibility. Assumptions must be defensible, conservative, and supported by comps. This section drives most “true risk.”</p>
-
-        <div class="grid2">
-          <div>
-            <h3>Stabilized Income Assumptions</h3>
-            <div class="row">
-              <div>
-                <label>Stabilized Gross Rent ($/yr)</label>
-                <input id="stbGrossRent" type="number" min="0" step="1000" value="0"/>
-              </div>
-              <div>
-                <label>Stabilized Other Income ($/yr)</label>
-                <input id="stbOtherIncome" type="number" min="0" step="100" value="0"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Stabilized Vacancy & Credit Loss (%)</label>
-                <input id="stbVacPct" type="number" min="0" max="100" step="0.1" value="7.0"/>
-              </div>
-              <div>
-                <label>Bad Debt Allowance (% of gross) (optional)</label>
-                <input id="badDebtPct" type="number" min="0" max="10" step="0.1" value="0.0"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Rent Growth (%/yr)</label>
-                <input id="rentGrowth" type="number" min="-20" max="30" step="0.1" value="2.0"/>
-              </div>
-              <div>
-                <label>Expense Growth (%/yr)</label>
-                <input id="expGrowth" type="number" min="-20" max="30" step="0.1" value="3.0"/>
-              </div>
-            </div>
-
-            <h3>Stabilized Expense Assumptions</h3>
-            <div class="row">
-              <div>
-                <label>Stabilized Taxes ($/yr)</label>
-                <input id="stbTaxes" type="number" min="0" step="100" value="0"/>
-              </div>
-              <div>
-                <label>Stabilized Insurance ($/yr)</label>
-                <input id="stbIns" type="number" min="0" step="100" value="0"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Stabilized R&M ($/yr)</label>
-                <input id="stbRepairs" type="number" min="0" step="100" value="0"/>
-              </div>
-              <div>
-                <label>Stabilized Utilities ($/yr)</label>
-                <input id="stbUtils" type="number" min="0" step="100" value="0"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Stabilized Other OpEx ($/yr)</label>
-                <input id="stbOtherOpex" type="number" min="0" step="100" value="0"/>
-              </div>
-              <div>
-                <label>Replacement Reserves ($/yr)</label>
-                <input id="stbRepl" type="number" min="0" step="100" value="0"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>CapEx Reserve ($/yr)</label>
-                <input id="stbCapex" type="number" min="0" step="100" value="0"/>
-              </div>
-              <div>
-                <label>Mgmt Fee (% of EGI)</label>
-                <input id="stbMgmtPct" type="number" min="0" max="100" step="0.1" value="4.0"/>
-              </div>
-            </div>
-
-            <div class="callout">
-              <strong>Interpretation:</strong> Pro forma NOI must be explained. If it relies on “low vacancy + no reserves + minimal mgmt,” it is not institutional.
-            </div>
-          </div>
-
-          <div>
-            <h3>Exit & Reversion</h3>
-            <div class="row">
-              <div>
-                <label>Exit Cap Rate (%)</label>
-                <input id="exitCap" type="number" min="0" step="0.01" value="6.50"/>
-              </div>
-              <div>
-                <label>Exit Cap Buffer (bps) (added to cap for conservative exit)</label>
-                <input id="exitCapBuffer" type="number" min="0" step="25" value="50"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Sales Costs (% of sale price)</label>
-                <input id="saleCostPct" type="number" min="0" step="0.1" value="3.0"/>
-              </div>
-              <div>
-                <label>Time‑to‑Exit (months)</label>
-                <input id="timeToExit" type="number" min="0" step="1" value="12"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Projection Horizon (years)</label>
-                <input id="projYears" type="number" min="1" step="1" value="5"/>
-              </div>
-              <div>
-                <label>Permanent Refi Rate (% annual) (takeout)</label>
-                <input id="takeoutRate" type="number" min="0" step="0.01" value="7.00"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Takeout Amortization (years)</label>
-                <input id="takeoutAmort" type="number" min="1" step="1" value="30"/>
-              </div>
-              <div>
-                <label>Takeout DSCR Requirement</label>
-                <input id="takeoutDSCR" type="number" min="0" step="0.01" value="1.25"/>
-              </div>
-            </div>
-
-            <div class="hr"></div>
-            <h3>Pro Forma Outputs</h3>
-            <div class="kpiGrid" id="kpiPF"></div>
-
-            <div class="hr"></div>
-            <h3>Year‑By‑Year Projection</h3>
-            <div id="projWrap"></div>
-
-            <div class="footerNote">
-              Takeout feasibility is evaluated both by DSCR and by implied takeout LTV (based on market cap rate + conservative buffer).
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="page" id="p_construction">
-      <div class="card">
-        <h2>G. Construction / Value‑Add / Business Plan</h2>
-        <p><strong>Purpose:</strong> Underwrite budget realism, schedule risk, and cost overrun protection. This is often where private credit losses originate (scope creep, delays, insufficient reserves).</p>
-
-        <div class="grid2">
-          <div>
-            <h3>Scope & Schedule</h3>
-            <div class="row">
-              <div>
-                <label>Scope Summary</label>
-                <textarea id="scope" placeholder="Major work items, systems, interiors/exteriors, leasing scope, TI/LC..."></textarea>
-              </div>
-              <div>
-                <label>Schedule Narrative</label>
-                <textarea id="scheduleNotes" placeholder="Start date, milestones, critical path, seasonality, permitting dependencies..."></textarea>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Hard Cost / SF or Unit ($)</label>
-                <input id="hardPer" type="number" min="0" step="1" value="0"/>
-              </div>
-              <div>
-                <label>Contingency Adequacy (Underwriter)</label>
-                <select id="contAdeq">
-                  <option>Adequate</option><option>Borderline</option><option>Inadequate</option><option>Unknown</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Contractor Experience (Underwriter)</label>
-                <select id="gcExp">
-                  <option>Strong</option><option>Moderate</option><option>Weak</option><option>Unknown</option>
-                </select>
-              </div>
-              <div>
-                <label>Owner‑Builder Risk</label>
-                <select id="obRisk">
-                  <option>Low</option><option>Moderate</option><option>High</option><option>Not Applicable</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="callout">
-              <strong>Controls that matter:</strong> third‑party budget review, GMP or fixed contract where possible, lender‑controlled contingency, and inspections with lien waivers.
-            </div>
-          </div>
-
-          <div>
-            <h3>Interest Carry & Reserve Adequacy</h3>
-            <p class="small">This section estimates interest carry over the stabilization timeline (construction + lease‑up + buffer) and compares to reserves.</p>
-
-            <div class="row">
-              <div>
-                <label>Stabilization Timeline (months)</label>
-                <input id="stabMonths" type="number" min="0" step="1" value="0"/>
-              </div>
-              <div>
-                <label>Carry Buffer (months)</label>
-                <input id="carryBufferMo" type="number" min="0" step="1" value="3"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Assumed Avg Utilization (% of loan)</label>
-                <input id="avgUtilPct" type="number" min="0" max="100" step="1" value="80"/>
-              </div>
-              <div>
-                <label>Operating Deficit During Lease‑Up ($/mo) (optional)</label>
-                <input id="leaseupDef" type="number" min="0" step="100" value="0"/>
-              </div>
-            </div>
-
-            <div class="kpiGrid" id="kpiCarry"></div>
-
-            <div class="warnbox" id="carryWarn" style="display:none"></div>
-
-            <div class="hr"></div>
-            <h3>Draw Schedule (Simple)</h3>
-            <p class="small">Add expected draws by month (optional). If not provided, the tool assumes even utilization.</p>
-            <table class="table" id="drawTbl">
-              <thead>
-                <tr><th class="nowrap">Month</th><th class="right">Draw ($)</th><th>Milestone</th><th class="right"></th></tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-            <div class="rowBtns">
-              <button class="btn" id="addDraw">Add Draw Row</button>
-              <button class="btn" id="evenDraw">Auto‑Even Draws</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="page" id="p_sponsor">
-      <div class="card">
-        <h2>H. Sponsor / Guarantor Spread (Bank‑Level)</h2>
-        <p><strong>Purpose:</strong> Evaluate guarantor strength, liquidity, contingent liabilities, and capacity to support the loan through stress. Private credit differs from banks in structure flexibility, but sponsor capacity still matters.</p>
-
-        <div class="grid2">
-          <div>
-            <h3>Personal Financial Statement (Summary)</h3>
-            <div class="row">
-              <div>
-                <label>Cash & Equivalents ($)</label>
-                <input id="pfsCash" type="number" min="0" step="1000" value="0"/>
-              </div>
-              <div>
-                <label>Marketable Securities ($)</label>
-                <input id="pfsMarket" type="number" min="0" step="1000" value="0"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Other Liquid (Retirement, etc.) ($)</label>
-                <input id="pfsOtherLiq" type="number" min="0" step="1000" value="0"/>
-              </div>
-              <div>
-                <label>Illiquid RE Equity ($)</label>
-                <input id="pfsReEq" type="number" min="0" step="1000" value="0"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Business Interests ($)</label>
-                <input id="pfsBiz" type="number" min="0" step="1000" value="0"/>
-              </div>
-              <div>
-                <label>Other Assets ($)</label>
-                <input id="pfsOther" type="number" min="0" step="1000" value="0"/>
-              </div>
-            </div>
-
-            <h3>Liabilities</h3>
-            <div class="row">
-              <div>
-                <label>Total Liabilities ($)</label>
-                <input id="pfsLiab" type="number" min="0" step="1000" value="0"/>
-              </div>
-              <div>
-                <label>Contingent Liabilities ($) (PGs, lawsuits)</label>
-                <input id="contLiab" type="number" min="0" step="1000" value="0"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Liquidity Haircut (% applied to “liquid” assets)</label>
-                <input id="liqHaircut" type="number" min="0" max="50" step="1" value="5"/>
-              </div>
-              <div>
-                <label>RE Equity Haircut (% applied to illiquid RE)</label>
-                <input id="reHaircut" type="number" min="0" max="80" step="5" value="25"/>
-              </div>
-            </div>
-
-            <div class="callout">
-              <strong>Conservatism:</strong> Apply haircuts. Liquidity on paper is not liquidity in a workout.
-            </div>
-          </div>
-
-          <div>
-            <h3>Income & Global Support</h3>
-            <div class="row">
-              <div>
-                <label>Personal Income (stable) ($/yr)</label>
-                <input id="persIncome" type="number" min="0" step="1000" value="0"/>
-              </div>
-              <div>
-                <label>Personal Living Expenses ($/yr)</label>
-                <input id="living" type="number" min="0" step="1000" value="0"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Other Required Debt Pmts ($/yr) (non‑RE)</label>
-                <input id="otherDebt" type="number" min="0" step="1000" value="0"/>
-              </div>
-              <div>
-                <label>Other Income Volatility</label>
-                <select id="incomeVol">
-                  <option>Low</option><option>Moderate</option><option>High</option><option>Unknown</option>
-                </select>
-              </div>
-            </div>
-
-            <label>Sponsor Track Record (summary)</label>
-            <textarea id="track" placeholder="Past projects, realized exits, construction experience, litigation, bankruptcies, fraud checks..."></textarea>
-
-            <label>Concentration Risk Notes</label>
-            <textarea id="conc" placeholder="Tenant, geography, property type concentration; reliance on one revenue stream..."></textarea>
-
-            <div class="hr"></div>
-            <h3>Sponsor KPIs (Auto)</h3>
-            <div class="kpiGrid" id="kpiSponsor"></div>
-
-            <div class="warnbox" id="sponsorWarn" style="display:none"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="page" id="p_global">
-      <div class="card">
-        <h2>I. Global Cash Flow (Portfolio & Businesses)</h2>
-        <p><strong>Purpose:</strong> Calculate global DSCR and identify liquidity burn sensitivity. This helps determine whether the sponsor can carry a project through delays, vacancy shocks, or rate shocks.</p>
-
-        <div class="grid2">
-          <div>
-            <h3>Portfolio Summary Inputs</h3>
-            <div class="row">
-              <div>
-                <label>Global NOI / Cash Flow Available ($/yr)</label>
-                <input id="globalNoi" type="number" min="0" step="1000" value="0"/>
-              </div>
-              <div>
-                <label>Global Debt Service ($/yr)</label>
-                <input id="globalDebtSvc" type="number" min="0" step="1000" value="0"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Portfolio Vacancy Sensitivity (% pts)</label>
-                <input id="globVacSens" type="number" min="0" max="50" step="0.5" value="5"/>
-              </div>
-              <div>
-                <label>Portfolio Rate Shock (bps)</label>
-                <input id="globRateBps" type="number" min="0" max="1000" step="25" value="200"/>
-              </div>
-            </div>
-
-            <div class="callout">
-              <strong>Interpretation:</strong> A strong property DSCR is not sufficient if the sponsor’s global position is weak and relies on constant refis or thin cash flow.
-            </div>
-
-            <div class="hr"></div>
-
-            <h3>Portfolio Detail (Optional Table)</h3>
-            <p class="small">Add key properties to compute a “bottom-up” global DSCR. If you use this, keep it conservative and tie to real statements.</p>
-            <table class="table" id="globTbl">
-              <thead>
-                <tr>
-                  <th>Property</th>
-                  <th class="right">NOI ($/yr)</th>
-                  <th class="right">Debt Svc ($/yr)</th>
-                  <th>Notes</th>
-                  <th class="right"></th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-            <div class="rowBtns">
-              <button class="btn" id="addGlob">Add Property</button>
-              <button class="btn" id="sumGlob">Set Global NOI/Debt from Table</button>
-            </div>
-          </div>
-
-          <div>
-            <h3>Global Outputs & Sensitivity</h3>
-            <div class="kpiGrid" id="kpiGlobal"></div>
-
-            <div class="hr"></div>
-            <h3>Sensitivity (Simple)</h3>
-            <div id="globSens"></div>
-
-            <div class="footerNote">
-              If global DSCR is weak, tighten the transaction: lower leverage, larger reserves, faster amortization, or require additional collateral.
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="page" id="p_stress">
-      <div class="card">
-        <h2>J. Stress Testing & Downside Scenarios</h2>
-        <p><strong>Purpose:</strong> Explicitly quantify what goes wrong, and show whether the loan can survive (or what the loss severity looks like). Private credit should price for downside but structure for survivability.</p>
-
-        <div class="grid2">
-          <div>
-            <h3>Downside Inputs</h3>
-            <div class="row">
-              <div>
-                <label>Rent Decline (% of stabilized rent)</label>
-                <input id="stRentDown" type="number" min="0" max="60" step="0.5" value="10"/>
-              </div>
-              <div>
-                <label>Vacancy Increase (absolute % pts)</label>
-                <input id="stVacUp" type="number" min="0" max="40" step="0.5" value="5"/>
-              </div>
-            </div>
-            <div class="row">
-              <div>
-                <label>Exit Cap Expansion (bps)</label>
-                <input id="stCapBps" type="number" min="0" max="500" step="25" value="75"/>
-              </div>
-              <div>
-                <label>Rate Shock (bps)</label>
-                <input id="stRateBps" type="number" min="0" max="1000" step="25" value="200"/>
-              </div>
-            </div>
-            <div class="row">
-              <div>
-                <label>Cost Overrun (% of hard costs)</label>
-                <input id="stCostOver" type="number" min="0" max="100" step="1" value="10"/>
-              </div>
-              <div>
-                <label>Lease‑Up / Execution Delay (months)</label>
-                <input id="stDelayMo" type="number" min="0" max="36" step="1" value="3"/>
-              </div>
-            </div>
-
-            <h3>Forced Sale Analysis</h3>
-            <div class="row">
-              <div>
-                <label>Forced Sale Discount (% vs as‑is)</label>
-                <input id="forcedDisc" type="number" min="0" max="60" step="1" value="15"/>
-              </div>
-              <div>
-                <label>Workout Costs (% of sale)</label>
-                <input id="workoutCost" type="number" min="0" max="20" step="0.5" value="6"/>
-              </div>
-            </div>
-
-            <div class="callout">
-              <strong>Interpretation:</strong> Stress tests should reflect plausible downside (not catastrophe). If plausible downside implies principal loss, restructure.
-            </div>
-          </div>
-
-          <div>
-            <h3>Stress Outputs</h3>
-            <div class="kpiGrid" id="kpiStress"></div>
-
-            <div class="hr"></div>
-            <h3>Mini Sensitivity Matrix (DSCR vs Cap Rate)</h3>
-            <div id="sensMatrix"></div>
-
-            <div class="hr"></div>
-            <h3>Downside Narrative (Auto Draft)</h3>
-            <div class="small" id="stressNarr"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="page" id="p_legal">
-      <div class="card">
-        <h2>K. Collateral & Legal Review</h2>
-        <p><strong>Purpose:</strong> Track third‑party diligence and “deal killers” (title, zoning, environmental, insurance). Credit approval should be conditioned on satisfactory diligence.</p>
-
-        <div class="grid2">
-          <div>
-            <h3>Title / Survey / Liens</h3>
-            <div class="row">
-              <div>
-                <label>Title Commitment Received?</label>
-                <select id="titleRecv">
-                  <option>No</option><option>Yes</option>
-                </select>
-              </div>
-              <div>
-                <label>Title Exceptions Acceptable?</label>
-                <select id="titleOk">
-                  <option>Unknown</option><option>Yes</option><option>No</option>
-                </select>
-              </div>
-            </div>
-            <div class="row">
-              <div>
-                <label>Survey Received?</label>
-                <select id="surveyRecv"><option>No</option><option>Yes</option></select>
-              </div>
-              <div>
-                <label>Mechanics Lien Risk</label>
-                <select id="mlRisk"><option>Low</option><option>Moderate</option><option>High</option><option>Unknown</option></select>
-              </div>
-            </div>
-
-            <label>Title / Legal Notes</label>
-            <textarea id="titleNotes" placeholder="Lien issues, easements, access, encroachments, HOA, litigation, etc."></textarea>
-
-            <h3>Zoning / Entitlements</h3>
-            <div class="row">
-              <div>
-                <label>Zoning Verified?</label>
-                <select id="zoning"><option>Unknown</option><option>Yes</option><option>No</option></select>
-              </div>
-              <div>
-                <label>Use Conforms?</label>
-                <select id="conforming"><option>Unknown</option><option>Yes</option><option>No</option></select>
-              </div>
-            </div>
-            <label>Zoning Notes</label>
-            <textarea id="zoningNotes"></textarea>
-          </div>
-
-          <div>
-            <h3>Environmental / Insurance / Appraisal</h3>
-            <div class="row">
-              <div>
-                <label>Phase I ESA Required?</label>
-                <select id="phaseReq"><option>Unknown</option><option>Yes</option><option>No</option></select>
-              </div>
-              <div>
-                <label>Phase I Result</label>
-                <select id="phaseRes"><option>Pending</option><option>Clean</option><option>RECs Identified</option><option>Not Applicable</option></select>
-              </div>
-            </div>
-            <div class="row">
-              <div>
-                <label>Insurance Bound?</label>
-                <select id="insBound"><option>No</option><option>Yes</option></select>
-              </div>
-              <div>
-                <label>Coverage Adequate?</label>
-                <select id="insOk"><option>Unknown</option><option>Yes</option><option>No</option></select>
-              </div>
-            </div>
-            <div class="row">
-              <div>
-                <label>Appraisal Reviewed?</label>
-                <select id="appRev"><option>No</option><option>Yes</option></select>
-              </div>
-              <div>
-                <label>Appraisal Concerns?</label>
-                <select id="appConc"><option>No</option><option>Yes</option><option>Unknown</option></select>
-              </div>
-            </div>
-
-            <label>Diligence / Legal Conditions Draft</label>
-            <textarea id="legalConds" placeholder="List specific conditions: title endorsements, Phase I, zoning letter, ALTA survey, insurance requirements, etc."></textarea>
-
-            <div class="hr"></div>
-            <h3>Diligence Readiness</h3>
-            <div class="kpiGrid" id="kpiDiligence"></div>
-
-            <div class="warnbox" id="dilWarn" style="display:none"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="page" id="p_rating">
-      <div class="card">
-        <h2>L. Risk Rating & Credit Decision Framework</h2>
-        <p><strong>Purpose:</strong> Produce an internal rating that is repeatable, auditable, and linked to pricing/structure expectations. Adjust weights to match your internal policy.</p>
-
-        <div class="grid2">
-          <div>
-            <h3>Quantitative Weighting</h3>
-            <div class="row">
-              <div>
-                <label>Weight: Leverage (LTV/LTC)</label>
-                <input id="wLev" type="number" min="0" max="100" step="1" value="30"/>
-              </div>
-              <div>
-                <label>Weight: Cash Flow (DSCR/DY)</label>
-                <input id="wCF" type="number" min="0" max="100" step="1" value="30"/>
-              </div>
-            </div>
-            <div class="row">
-              <div>
-                <label>Weight: Sponsor Strength</label>
-                <input id="wSp" type="number" min="0" max="100" step="1" value="25"/>
-              </div>
-              <div>
-                <label>Weight: Collateral Liquidity</label>
-                <input id="wCol" type="number" min="0" max="100" step="1" value="15"/>
-              </div>
-            </div>
-
-            <div class="callout">
-              <strong>Practice:</strong> Risk rating should be stable over time and comparable across deals. Avoid “custom scoring” that only supports approval.
-            </div>
-
-            <div class="hr"></div>
-            <h3>Risk-Based Pricing Guidance</h3>
-            <p class="small">This is advisory only. In production, link to your pricing matrix. Here we provide a baseline spread suggestion.</p>
-            <div class="kpiGrid" id="kpiPricingGuide"></div>
-          </div>
-
-          <div>
-            <h3>Computed Rating</h3>
-            <div class="kpiGrid" id="kpiRating"></div>
-
-            <div class="hr"></div>
-            <h3>Committee Summary (Auto Draft)</h3>
-            <div class="small" id="ratingNarr"></div>
-
-            <div class="footerNote">
-              Ratings should be supported by exhibits: appraisal, rent roll, T‑12, sponsor PFS, background check, and budget.
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="page" id="p_conditions">
-      <div class="card">
-        <h2>M. Conditions, Covenants & Monitoring</h2>
-        <p><strong>Purpose:</strong> Translate underwriting findings into enforceable conditions and ongoing monitoring. The best credit decisions are “operationalized” with triggers and reporting cadence.</p>
-
-        <div class="grid2">
-          <div>
-            <h3>Pre‑Funding Conditions (Core)</h3>
-            <label>Conditions (editable)</label>
-            <textarea id="conds" placeholder="Auto-populated in outputs; edit to match the deal."></textarea>
-
-            <h3>Ongoing Reporting</h3>
-            <div class="row">
-              <div>
-                <label>Monthly Rent Roll?</label>
-                <select id="monRR"><option>Yes</option><option>No</option></select>
-              </div>
-              <div>
-                <label>Quarterly Financials?</label>
-                <select id="qFin"><option>Yes</option><option>No</option></select>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Annual Borrower Financials?</label>
-                <select id="annFin"><option>Yes</option><option>No</option></select>
-              </div>
-              <div>
-                <label>Construction Reporting (if applicable)</label>
-                <select id="constRpt"><option>Not Applicable</option><option>Monthly</option><option>Per Draw</option></select>
-              </div>
-            </div>
-
-            <div class="callout">
-              <strong>Principle:</strong> If a risk is material, it should map to a covenant, reserve, control, or reporting requirement.
-            </div>
-          </div>
-
-          <div>
-            <h3>Covenants & Triggers</h3>
-            <div class="row">
-              <div>
-                <label>Minimum DSCR Covenant</label>
-                <input id="covDSCR" type="number" min="0" step="0.01" value="1.10"/>
-              </div>
-              <div>
-                <label>Max LTV Covenant (%)</label>
-                <input id="covLTV" type="number" min="0" step="0.1" value="85.0"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Cash Sweep Trigger DSCR</label>
-                <input id="sweepDSCR" type="number" min="0" step="0.01" value="1.00"/>
-              </div>
-              <div>
-                <label>Reserve Top‑Up Trigger</label>
-                <select id="topup"><option>Yes</option><option>No</option></select>
-              </div>
-            </div>
-
-            <label>Early Warning Indicators</label>
-            <textarea id="ewi" placeholder="Examples: DSCR deterioration, occupancy drop, budget variance, lien notices, tax delinquency, sponsor liquidity decline..."></textarea>
-
-            <div class="hr"></div>
-            <h3>Monitoring Summary (Auto)</h3>
-            <div class="small" id="monNarr"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="page" id="p_outputs">
-      <div class="card">
-        <h2>N. Outputs (Executive Summary & Credit Memo)</h2>
-        <p><strong>Purpose:</strong> Produce committee-ready outputs: one-page summary, key metrics, risk/mitigants, and a structured memo. All outputs are derived from your inputs.</p>
-
-        <div class="grid2">
-          <div>
-            <h3>1‑Page Executive Credit Summary</h3>
-            <div class="kpiGrid" id="kpiExec"></div>
-
-            <div class="hr"></div>
-            <div class="grid2">
-              <div>
-                <h3>Key Risks</h3>
-                <ul id="outRisks" class="small"></ul>
-              </div>
-              <div>
-                <h3>Mitigants</h3>
-                <ul id="outMitigants" class="small"></ul>
-              </div>
-            </div>
-
-            <div class="hr"></div>
-            <h3>Exit Strategy</h3>
-            <div class="small" id="outExit"></div>
-
-            <div class="hr"></div>
-            <h3>Conditions (Draft)</h3>
-            <ul id="outConds" class="small"></ul>
-          </div>
-
-          <div>
-            <h3>Full Credit Memo (Structured)</h3>
-            <div id="memo"></div>
-
-            <div class="printOnly" style="margin-top:14px">
-              <div class="small">Printed summary generated from stored inputs. Attach exhibits: rent roll, T‑12, appraisal/BPO, title, insurance, budget, sponsor PFS, and exit comps.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="page" id="p_feedback">
-      <div class="card">
-        <h2>O. Underwriter Feedback & Improvement Recommendations</h2>
-        <p><strong>Purpose:</strong> Provide built-in critiques of your underwriting file quality and suggest how to strengthen it (structure, diligence, assumptions).</p>
-
-        <div class="grid2">
-          <div>
-            <h3>File Quality Flags (Auto)</h3>
-            <div id="qualityFlags"></div>
-
-            <div class="hr"></div>
-            <h3>How to Make This Better (Design Notes)</h3>
-            <div class="callout">
-              <ul>
-                <li><strong>Add document uploads:</strong> In production, add a backend for storing rent rolls, T‑12 PDFs, appraisal, and insurance binders, and tie each to a checklist item.</li>
-                <li><strong>Expand global cash flow:</strong> Add a full schedule of real estate owned (SREO) with liens, rates, maturities, and DSCR per asset.</li>
-                <li><strong>Normalize automatically:</strong> Add “market vacancy” by asset/submarket and capex/reserve benchmarks by property type.</li>
-                <li><strong>Facility compliance:</strong> Add warehouse line covenants (max LTV, min DY, seasoning rules) and flag exceptions.</li>
-                <li><strong>Decision log:</strong> Add a section capturing committee questions and final conditions to create a permanent audit trail.</li>
-                <li><strong>Cash management engine:</strong> Model lockbox, waterfall, and triggers, and generate covenant tests automatically.</li>
-              </ul>
-            </div>
-          </div>
-
-          <div>
-            <h3>Underwriter Notes</h3>
-            <label>Strengths</label>
-            <textarea id="uwStrengths" placeholder="List primary strengths in bank-style terms (collateral quality, liquidity, exit certainty, low leverage, etc.)."></textarea>
-
-            <label>Weaknesses</label>
-            <textarea id="uwWeaknesses" placeholder="List primary weaknesses (thin DSCR, execution risk, shallow market, sponsor liquidity, etc.)."></textarea>
-
-            <label>Key Questions for Sponsor / Borrower</label>
-            <textarea id="uwQuestions" placeholder="What needs to be answered before approval/closing?"></textarea>
-
-            <label>Committee Talking Points</label>
-            <textarea id="uwTalking" placeholder="Anticipate objections and preempt with facts/mitigants."></textarea>
-          </div>
-        </div>
-      </div>
-    </section>
-
-  </main>
-</div>
-
-<script defer src="./app.js"></script>
-
+  <script defer src="./app.js"></script>
 </body>
 </html>
