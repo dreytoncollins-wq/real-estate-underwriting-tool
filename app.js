@@ -58,8 +58,8 @@ function kpiCard(title, value, tag, note=""){
 function productLabel(p){
   const map={
     bridge:"Bridge (Transitional)",
-    fixflip:"Fix‑and‑Flip",
-    construction:"Ground‑Up Construction",
+    fixflip:"Fix-and-Flip",
+    construction:"Ground-Up Construction",
     commercial_bridge:"Commercial Bridge",
     land:"Land Acquisition",
     second_lien:"Second Lien / Mezz",
@@ -82,12 +82,12 @@ const productDefaults = {
 };
 function applyDefaults(prod){
   const d = productDefaults[prod]; if(!d) return;
-  $("termMonths").value = d.termMonths;
-  $("ioMonths").value = d.ioMonths;
-  $("noteRate").value = d.noteRate.toFixed(2);
-  $("amortYears").value = d.amortYears;
-  $("origPoints").value = d.origPoints.toFixed(2);
-  $("lienPos").value = d.lienPos;
+  if($("termMonths")) $("termMonths").value = d.termMonths;
+  if($("ioMonths")) $("ioMonths").value = d.ioMonths;
+  if($("noteRate")) $("noteRate").value = d.noteRate.toFixed(2);
+  if($("amortYears")) $("amortYears").value = d.amortYears;
+  if($("origPoints")) $("origPoints").value = d.origPoints.toFixed(2);
+  if($("lienPos")) $("lienPos").value = d.lienPos;
 }
 
 /* =========================================================
@@ -107,7 +107,9 @@ function rrRow(i, r){
   </tr>`;
 }
 function renderRR(){
-  const tb = $("rentRollTbl").querySelector("tbody");
+  const wrap = $("rentRollTbl");
+  if(!wrap) return;
+  const tb = wrap.querySelector("tbody");
   tb.innerHTML = rentRoll.map((r,i)=>rrRow(i,r)).join("") || `<tr><td colspan="5" class="small">No rows yet.</td></tr>`;
   qsa("[data-rr]").forEach(el=>{
     el.addEventListener("input", ()=>{
@@ -124,7 +126,7 @@ function addRR(){
 }
 function sumRR(){
   const totalMonthly = rentRoll.reduce((s,r)=>s+safeNum(r.rent),0);
-  $("grossRent").value = Math.round(totalMonthly*12);
+  if($("grossRent")) $("grossRent").value = Math.round(totalMonthly*12);
   toast("Gross Scheduled Rent updated from rent roll.");
   calc();
 }
@@ -139,7 +141,9 @@ function globRow(i, r){
   </tr>`;
 }
 function renderGlob(){
-  const tb = $("globTbl").querySelector("tbody");
+  const wrap = $("globTbl");
+  if(!wrap) return;
+  const tb = wrap.querySelector("tbody");
   tb.innerHTML = globProps.map((r,i)=>globRow(i,r)).join("") || `<tr><td colspan="5" class="small">No properties yet.</td></tr>`;
   qsa("[data-g]").forEach(el=>{
     el.addEventListener("input", ()=>{
@@ -157,8 +161,8 @@ function addGlob(){
 function sumGlob(){
   const noi = globProps.reduce((s,r)=>s+safeNum(r.noi),0);
   const ds  = globProps.reduce((s,r)=>s+safeNum(r.ds),0);
-  $("globalNoi").value = Math.round(noi);
-  $("globalDebtSvc").value = Math.round(ds);
+  if($("globalNoi")) $("globalNoi").value = Math.round(noi);
+  if($("globalDebtSvc")) $("globalDebtSvc").value = Math.round(ds);
   toast("Global NOI / Debt Service set from table.");
   calc();
 }
@@ -172,7 +176,9 @@ function drawRow(i, r){
   </tr>`;
 }
 function renderDraws(){
-  const tb = $("drawTbl").querySelector("tbody");
+  const wrap = $("drawTbl");
+  if(!wrap) return;
+  const tb = wrap.querySelector("tbody");
   tb.innerHTML = draws.map((r,i)=>drawRow(i,r)).join("") || `<tr><td colspan="4" class="small">No draw rows yet.</td></tr>`;
   qsa("[data-d]").forEach(el=>{
     el.addEventListener("input", ()=>{
@@ -185,9 +191,8 @@ function renderDraws(){
 function delDraw(i){ draws.splice(i,1); renderDraws(); calc(); }
 function addDraw(){ draws.push({mo:1, amt:0, ms:""}); renderDraws(); }
 function evenDraw(){
-  // Auto-even draws across constMonths (or stabMonths if defined)
-  const loanAmt = safeNum($("loanAmount").value);
-  const months = Math.max(1, safeNum($("constMonths").value||0) || safeNum($("stabMonths").value||0) || 6);
+  const loanAmt = safeNum($("loanAmount")?.value);
+  const months = Math.max(1, safeNum($("constMonths")?.value||0) || safeNum($("stabMonths")?.value||0) || 6);
   draws = [];
   const per = loanAmt / months;
   for(let m=1;m<=months;m++) draws.push({mo:m, amt:Math.round(per/1000)*1000, ms:""});
@@ -202,7 +207,7 @@ function evenDraw(){
 const STORAGE_KEY="uw_tool_v2";
 function collectState(){
   const ids = qsa("input,select,textarea").map(el=>el.id).filter(Boolean);
-  const data={}; ids.forEach(id=>{ data[id] = $(id).value; });
+  const data={}; ids.forEach(id=>{ const el=$(id); if(el) data[id] = el.value; });
   data.__tables = { rentRoll, globProps, draws };
   return data;
 }
@@ -241,7 +246,7 @@ function exportJSON(){
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
   const url=URL.createObjectURL(blob);
   const a=document.createElement("a");
-  const nm=($("dealName").value||"underwriting").replace(/[^a-z0-9]+/gi,"_").toLowerCase();
+  const nm=($("dealName")?.value||"underwriting").replace(/[^a-z0-9]+/gi,"_").toLowerCase();
   a.href=url; a.download=nm+"_uw_v2.json";
   document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
 }
@@ -273,13 +278,13 @@ function clearAll(){
   rentRoll=[]; globProps=[]; draws=[];
   renderRR(); renderGlob(); renderDraws();
   // restore some sane defaults
-  $("uwDate").value = todayISO();
-  $("cofPctFunded").value = 80;
-  $("cofRate").value = 8.00;
-  $("policyMinDSCR").value = 1.20;
-  $("targetROA").value = 10.0;
-  $("targetCoC").value = 18.0;
-  applyDefaults($("loanProduct").value);
+  if($("uwDate")) $("uwDate").value = todayISO();
+  if($("cofPctFunded")) $("cofPctFunded").value = 80;
+  if($("cofRate")) $("cofRate").value = 8.00;
+  if($("policyMinDSCR")) $("policyMinDSCR").value = 1.20;
+  if($("targetROA")) $("targetROA").value = 10.0;
+  if($("targetCoC")) $("targetCoC").value = 18.0;
+  if($("loanProduct")) applyDefaults($("loanProduct").value);
   toast("Cleared.");
   calc();
 }
@@ -296,12 +301,76 @@ function toast(msg){
 }
 function showPage(id){
   qsa(".page").forEach(p=>p.classList.remove("active"));
-  $(id).classList.add("active");
+  const el = $(id);
+  if(el) el.classList.add("active");
   qsa("#nav button").forEach(b=>{
     b.classList.toggle("active", b.dataset.page===id);
   });
-  window.scrollTo({top:0, behavior:"instant"});
+  // "instant" isn't valid; use auto
+  window.scrollTo({top:0, behavior:"auto"});
 }
+
+/* =========================================================
+   Inputs vs Outputs Mode (module)
+========================================================= */
+const UO_MODE = (function () {
+  const MODE_KEY = "uo_mode";
+
+  const INPUT_PAGES = new Set([
+    "p_deal","p_structure","p_sources","p_property","p_hist","p_proforma",
+    "p_construction","p_sponsor","p_global","p_stress","p_legal","p_rating","p_conditions"
+  ]);
+
+  const OUTPUT_PAGES = new Set(["p_outputs","p_feedback"]);
+
+  function getAllowedDefault(isInputs){
+    return isInputs ? "p_deal" : "p_outputs";
+  }
+
+  function setMode(mode) {
+    mode = (mode === "outputs") ? "outputs" : "inputs";
+    const isInputs = mode === "inputs";
+
+    // Badge + button styling
+    const badge = $("modeBadge");
+    const bIn = $("btnModeInputs");
+    const bOut = $("btnModeOutputs");
+    if (badge) badge.textContent = "Mode: " + (isInputs ? "Inputs" : "Outputs");
+    if (bIn) bIn.classList.toggle("active", isInputs);
+    if (bOut) bOut.classList.toggle("active", !isInputs);
+
+    // Sidebar: hide/show ONLY the real page nav buttons
+    document.querySelectorAll("#nav button[data-page]").forEach((btn) => {
+      const pageId = btn.getAttribute("data-page");
+      const show = isInputs ? INPUT_PAGES.has(pageId) : OUTPUT_PAGES.has(pageId);
+      btn.style.display = show ? "" : "none";
+      btn.classList.remove("active");
+    });
+
+    // Force active page to be allowed
+    const active = document.querySelector("section.page.active");
+    const activeId = active ? active.id : "";
+    const allowed = isInputs ? INPUT_PAGES : OUTPUT_PAGES;
+    const target = allowed.has(activeId) ? activeId : getAllowedDefault(isInputs);
+    showPage(target);
+
+    // Persist
+    try { localStorage.setItem(MODE_KEY, mode); } catch (e) {}
+  }
+
+  function init(){
+    const bIn = $("btnModeInputs");
+    const bOut = $("btnModeOutputs");
+    if (bIn) bIn.addEventListener("click", () => setMode("inputs"));
+    if (bOut) bOut.addEventListener("click", () => setMode("outputs"));
+
+    let saved = "inputs";
+    try { saved = localStorage.getItem(MODE_KEY) || "inputs"; } catch (e) {}
+    setMode(saved);
+  }
+
+  return { init, setMode };
+})();
 
 /* =========================================================
    Core Calculations
@@ -309,74 +378,78 @@ function showPage(id){
 let last = {}; // store last calc outputs for memo/exports
 function calc(){
   // Deal header
-  const deal = $("dealName").value.trim() || "—";
-  const prod = $("loanProduct").value;
-  $("hdrDeal").textContent = deal;
-  $("hdrProd").textContent = productLabel(prod);
+  const deal = ($("dealName")?.value||"").trim() || "—";
+  const prod = $("loanProduct")?.value;
 
-     /* ===== Print Header Sync ===== */
-  if ($("printDeal")) {
-    $("printDeal").textContent = deal;
-  }
-  if ($("printDate")) {
-    $("printDate").textContent = $("uwDate").value || "—";
-  }
+  if($("hdrDeal")) $("hdrDeal").textContent = deal;
+  if($("hdrProd")) $("hdrProd").textContent = productLabel(prod);
+
+  /* ===== Print Header Sync ===== */
+  if ($("printDeal")) $("printDeal").textContent = deal;
+  if ($("printDate")) $("printDate").textContent = ($("uwDate")?.value) || "—";
 
   // Ensure source loan default mirrors loan amount
-  if(safeNum($("srcLoan").value)===0 && safeNum($("loanAmount").value)>0){
-    $("srcLoan").value = $("loanAmount").value;
+  if($("srcLoan") && $("loanAmount")){
+    if(safeNum($("srcLoan").value)===0 && safeNum($("loanAmount").value)>0){
+      $("srcLoan").value = $("loanAmount").value;
+    }
   }
 
   // Pull core inputs
-  const loanAmt = safeNum($("loanAmount").value);
-  const termMo = Math.max(1, safeNum($("termMonths").value));
-  const ioMo = safeNum($("ioMonths").value);
-  const noteRate = safeNum($("noteRate").value);
-  const amortY = Math.max(1, safeNum($("amortYears").value));
-  const points = safeNum($("origPoints").value);
-  const otherFees = safeNum($("otherFees").value);
-  const exitFee = safeNum($("exitFee").value);
-  const cof = safeNum($("cofRate").value);
-  const cofPct = safeNum($("cofPctFunded").value)/100;
+  const loanAmt = safeNum($("loanAmount")?.value);
+  const termMo = Math.max(1, safeNum($("termMonths")?.value));
+  let ioMo = safeNum($("ioMonths")?.value);
 
-  const lienPos = $("lienPos").value;
-  const seniorAhead = safeNum($("seniorAhead").value);
+  // Clamp IO months into [0, termMo] to avoid weird states
+  ioMo = clamp(ioMo, 0, termMo);
+  if ($("ioMonths") && safeNum($("ioMonths").value) !== ioMo) $("ioMonths").value = ioMo;
+
+  const noteRate = safeNum($("noteRate")?.value);
+  const amortY = Math.max(1, safeNum($("amortYears")?.value));
+  const points = safeNum($("origPoints")?.value);
+  const otherFees = safeNum($("otherFees")?.value);
+  const exitFee = safeNum($("exitFee")?.value);
+  const cof = safeNum($("cofRate")?.value);
+  const cofPct = safeNum($("cofPctFunded")?.value)/100;
+
+  const lienPos = $("lienPos")?.value;
+  const seniorAhead = safeNum($("seniorAhead")?.value);
 
   // Values
-  const asIs = safeNum($("asIsValue").value);
-  const arv = safeNum($("arvValue").value) || asIs;
-  const purchase = safeNum($("purchasePrice").value);
+  const asIs = safeNum($("asIsValue")?.value);
+  const arv = safeNum($("arvValue")?.value) || asIs;
+  const purchase = safeNum($("purchasePrice")?.value);
 
   // Uses
-  const borClosing = safeNum($("borClosing").value);
-  const rehab = safeNum($("rehabBudget").value);
-  const soft = safeNum($("softCosts").value);
-  const contPct = safeNum($("contPct").value)/100;
+  const borClosing = safeNum($("borClosing")?.value);
+  const rehab = safeNum($("rehabBudget")?.value);
+  const soft = safeNum($("softCosts")?.value);
+  const contPct = safeNum($("contPct")?.value)/100;
   const contingency = rehab * contPct;
-  const estCarry = safeNum($("estCarry").value);
-  const leasingCosts = safeNum($("leasingCosts").value);
-  const totalUsesOverride = safeNum($("totalUses").value);
+  const estCarry = safeNum($("estCarry")?.value);
+  const leasingCosts = safeNum($("leasingCosts")?.value);
+  const totalUsesOverride = safeNum($("totalUses")?.value);
   const totalUses = totalUsesOverride>0 ? totalUsesOverride : (purchase+borClosing+rehab+soft+contingency+estCarry+leasingCosts);
-  const loanSrc = safeNum($("srcLoan").value) || loanAmt;
-  const equity = safeNum($("sponsorEquity").value);
-  const otherFin = safeNum($("otherFin").value);
+  const loanSrc = safeNum($("srcLoan")?.value) || loanAmt;
+  const equity = safeNum($("sponsorEquity")?.value);
+  const otherFin = safeNum($("otherFin")?.value);
   const sources = loanSrc + equity + otherFin;
   const gap = sources - totalUses;
 
   // Historical Ops
-  const grossRent = safeNum($("grossRent").value);
-  const otherInc = safeNum($("otherIncome").value);
-  const vacPct = safeNum($("vacPct").value)/100;
-  const mgmtPct = safeNum($("mgmtPct").value)/100;
+  const grossRent = safeNum($("grossRent")?.value);
+  const otherInc = safeNum($("otherIncome")?.value);
+  const vacPct = safeNum($("vacPct")?.value)/100;
+  const mgmtPct = safeNum($("mgmtPct")?.value)/100;
 
-  const taxes = safeNum($("taxes").value);
-  const ins = safeNum($("insurance").value);
-  const repairs = safeNum($("repairs").value);
-  const utils = safeNum($("utilities").value);
-  const payroll = safeNum($("payroll").value);
-  const otherOpex = safeNum($("otherOpex").value);
-  const repl = safeNum($("replReserves").value);
-  const normAdj = safeNum($("normAdj").value);
+  const taxes = safeNum($("taxes")?.value);
+  const ins = safeNum($("insurance")?.value);
+  const repairs = safeNum($("repairs")?.value);
+  const utils = safeNum($("utilities")?.value);
+  const payroll = safeNum($("payroll")?.value);
+  const otherOpex = safeNum($("otherOpex")?.value);
+  const repl = safeNum($("replReserves")?.value);
+  const normAdj = safeNum($("normAdj")?.value);
 
   const grossIncome = grossRent + otherInc;
   const vacLoss = grossIncome * vacPct;
@@ -386,21 +459,21 @@ function calc(){
   const noi = egi - opEx;
 
   // Pro Forma
-  const stbGrossRent = safeNum($("stbGrossRent").value);
-  const stbOtherIncome = safeNum($("stbOtherIncome").value);
-  const stbVacPct = safeNum($("stbVacPct").value)/100;
-  const badDebtPct = safeNum($("badDebtPct").value)/100;
-  const rentG = safeNum($("rentGrowth").value)/100;
-  const expG = safeNum($("expGrowth").value)/100;
+  const stbGrossRent = safeNum($("stbGrossRent")?.value);
+  const stbOtherIncome = safeNum($("stbOtherIncome")?.value);
+  const stbVacPct = safeNum($("stbVacPct")?.value)/100;
+  const badDebtPct = safeNum($("badDebtPct")?.value)/100;
+  const rentG = safeNum($("rentGrowth")?.value)/100;
+  const expG = safeNum($("expGrowth")?.value)/100;
 
-  const stbTaxes = safeNum($("stbTaxes").value) || taxes;
-  const stbIns = safeNum($("stbIns").value) || ins;
-  const stbRep = safeNum($("stbRepairs").value) || repairs;
-  const stbUtl = safeNum($("stbUtils").value) || utils;
-  const stbOther = safeNum($("stbOtherOpex").value) || (payroll + otherOpex);
-  const stbRepl = safeNum($("stbRepl").value) || repl;
-  const stbCapex = safeNum($("stbCapex").value);
-  const stbMgmtPct = safeNum($("stbMgmtPct").value)/100;
+  const stbTaxes = safeNum($("stbTaxes")?.value) || taxes;
+  const stbIns = safeNum($("stbIns")?.value) || ins;
+  const stbRep = safeNum($("stbRepairs")?.value) || repairs;
+  const stbUtl = safeNum($("stbUtils")?.value) || utils;
+  const stbOther = safeNum($("stbOtherOpex")?.value) || (payroll + otherOpex);
+  const stbRepl = safeNum($("stbRepl")?.value) || repl;
+  const stbCapex = safeNum($("stbCapex")?.value);
+  const stbMgmtPct = safeNum($("stbMgmtPct")?.value)/100;
 
   const stbGI = stbGrossRent + stbOtherIncome;
   const stbVacLoss = stbGI * stbVacPct;
@@ -432,14 +505,14 @@ function calc(){
   const breakeven = safeDiv((opEx + dsAnnual), grossIncome)*100;
 
   // Exit / takeout
-  const exitCap = safeNum($("exitCap").value)/100;
-  const capBuf = safeNum($("exitCapBuffer").value)/10000;
+  const exitCap = safeNum($("exitCap")?.value)/100;
+  const capBuf = safeNum($("exitCapBuffer")?.value)/10000;
   const exitCapCons = exitCap + capBuf;
-  const saleCostPct = safeNum($("saleCostPct").value)/100;
-  const projYears = Math.max(1, Math.round(safeNum($("projYears").value)));
-  const takeoutRate = safeNum($("takeoutRate").value);
-  const takeoutAmort = Math.max(1, safeNum($("takeoutAmort").value));
-  const takeoutDSCR = safeNum($("takeoutDSCR").value);
+  const saleCostPct = safeNum($("saleCostPct")?.value)/100;
+  const projYears = Math.max(1, Math.round(safeNum($("projYears")?.value)));
+  const takeoutRate = safeNum($("takeoutRate")?.value);
+  const takeoutAmort = Math.max(1, safeNum($("takeoutAmort")?.value));
+  const takeoutDSCR = safeNum($("takeoutDSCR")?.value);
 
   // Projections
   let proj = [];
@@ -478,11 +551,11 @@ function calc(){
   const coc = safeDiv(netLender, lenderEquity)*100;
 
   // Construction carry estimation
-  const interestReserve = safeNum($("interestReserve").value);
-  const stabMonths = safeNum($("stabMonths").value) || (safeNum($("constMonths").value)+safeNum($("leaseupMonths").value));
-  const carryBufferMo = safeNum($("carryBufferMo").value);
-  const avgUtilPct = safeNum($("avgUtilPct").value)/100;
-  const leaseupDef = safeNum($("leaseupDef").value);
+  const interestReserve = safeNum($("interestReserve")?.value);
+  const stabMonths = safeNum($("stabMonths")?.value) || (safeNum($("constMonths")?.value)+safeNum($("leaseupMonths")?.value));
+  const carryBufferMo = safeNum($("carryBufferMo")?.value);
+  const avgUtilPct = safeNum($("avgUtilPct")?.value)/100;
+  const leaseupDef = safeNum($("leaseupDef")?.value);
   const carryMonths = Math.max(0, stabMonths + carryBufferMo);
   const avgBal = loanAmt * clamp(avgUtilPct,0,1);
   const carryInterest = avgBal*(noteRate/100)*(carryMonths/12);
@@ -491,12 +564,12 @@ function calc(){
   const carryGap = carryNeed - interestReserve;
 
   // Stress tests
-  const stRentDown = safeNum($("stRentDown").value)/100;
-  const stVacUp = safeNum($("stVacUp").value)/100;
-  const stCapBps = safeNum($("stCapBps").value)/10000;
-  const stRateBps = safeNum($("stRateBps").value)/10000;
-  const stCostOver = safeNum($("stCostOver").value)/100;
-  const stDelayMo = safeNum($("stDelayMo").value);
+  const stRentDown = safeNum($("stRentDown")?.value)/100;
+  const stVacUp = safeNum($("stVacUp")?.value)/100;
+  const stCapBps = safeNum($("stCapBps")?.value)/10000;
+  const stRateBps = safeNum($("stRateBps")?.value)/10000;
+  const stCostOver = safeNum($("stCostOver")?.value)/100;
+  const stDelayMo = safeNum($("stDelayMo")?.value);
 
   const stGrossRent = stbGrossRent*(1-stRentDown);
   const stGI = stGrossRent + stbOtherIncome;
@@ -520,24 +593,24 @@ function calc(){
   const stLTC = safeDiv(loanAmt, stUses)*100;
 
   // Forced sale
-  const forcedDisc = safeNum($("forcedDisc").value)/100;
-  const workoutCost = safeNum($("workoutCost").value)/100;
+  const forcedDisc = safeNum($("forcedDisc")?.value)/100;
+  const workoutCost = safeNum($("workoutCost")?.value)/100;
   const forcedValue = asIs*(1-forcedDisc);
   const netForced = forcedValue*(1-workoutCost);
   const forcedCoverage = safeDiv(netForced, payoff);
   const forcedLoss = Math.max(0, payoff - netForced);
 
   // Sponsor / PFS
-  const pfsCash = safeNum($("pfsCash").value);
-  const pfsMarket = safeNum($("pfsMarket").value);
-  const pfsOtherLiq = safeNum($("pfsOtherLiq").value);
-  const pfsReEq = safeNum($("pfsReEq").value);
-  const pfsBiz = safeNum($("pfsBiz").value);
-  const pfsOther = safeNum($("pfsOther").value);
-  const pfsLiab = safeNum($("pfsLiab").value);
-  const contLiab = safeNum($("contLiab").value);
-  const liqHaircut = safeNum($("liqHaircut").value)/100;
-  const reHaircut = safeNum($("reHaircut").value)/100;
+  const pfsCash = safeNum($("pfsCash")?.value);
+  const pfsMarket = safeNum($("pfsMarket")?.value);
+  const pfsOtherLiq = safeNum($("pfsOtherLiq")?.value);
+  const pfsReEq = safeNum($("pfsReEq")?.value);
+  const pfsBiz = safeNum($("pfsBiz")?.value);
+  const pfsOther = safeNum($("pfsOther")?.value);
+  const pfsLiab = safeNum($("pfsLiab")?.value);
+  const contLiab = safeNum($("contLiab")?.value);
+  const liqHaircut = safeNum($("liqHaircut")?.value)/100;
+  const reHaircut = safeNum($("reHaircut")?.value)/100;
 
   const grossLiq = pfsCash + pfsMarket + pfsOtherLiq;
   const adjLiq = grossLiq*(1-liqHaircut);
@@ -547,14 +620,14 @@ function calc(){
   const liqToLoan = safeDiv(adjLiq, loanAmt);
 
   // Global
-  const globalNoi = safeNum($("globalNoi").value);
-  const globalDebtSvc = safeNum($("globalDebtSvc").value);
-  const living = safeNum($("living").value);
-  const otherDebt = safeNum($("otherDebt").value);
+  const globalNoi = safeNum($("globalNoi")?.value);
+  const globalDebtSvc = safeNum($("globalDebtSvc")?.value);
+  const living = safeNum($("living")?.value);
+  const otherDebt = safeNum($("otherDebt")?.value);
   const globalDSCR = safeDiv((globalNoi - living), (globalDebtSvc + otherDebt));
   const globalWithDeal = safeDiv((globalNoi - living), (globalDebtSvc + otherDebt + dsAnnual));
-  const globVacSens = safeNum($("globVacSens").value)/100;
-  const globRateBps = safeNum($("globRateBps").value)/10000;
+  const globVacSens = safeNum($("globVacSens")?.value)/100;
+  const globRateBps = safeNum($("globRateBps")?.value)/10000;
   const globalNoiStress = globalNoi*(1-globVacSens);
   const globalDebtStress = globalDebtSvc*(1 + (globRateBps*2)); // rough
   const globalStressDSCR = safeDiv((globalNoiStress - living), (globalDebtStress + otherDebt + stDS));
@@ -565,23 +638,23 @@ function calc(){
   const liqAfterBurn = Math.max(0, adjLiq - liqBurn);
 
   // Market / diligence scoring
-  const liqScore = safeNum($("liqScore").value);
-  const tts = safeNum($("tts").value);
-  const pipeline = $("pipeline").value;
-  const mktVacTrend = $("mktVacTrend").value;
+  const liqScore = safeNum($("liqScore")?.value);
+  const tts = safeNum($("tts")?.value);
+  const pipeline = $("pipeline")?.value;
+  const mktVacTrend = $("mktVacTrend")?.value;
 
   // Diligence readiness
-  const titleOk = $("titleOk").value;
-  const zoning = $("zoning").value;
-  const phaseRes = $("phaseRes").value;
-  const insOk = $("insOk").value;
-  const appRev = $("appRev").value;
+  const titleOk = $("titleOk")?.value;
+  const zoning = $("zoning")?.value;
+  const phaseRes = $("phaseRes")?.value;
+  const insOk = $("insOk")?.value;
+  const appRev = $("appRev")?.value;
 
   // Risk rating (weighted)
-  const wLev = safeNum($("wLev").value);
-  const wCF = safeNum($("wCF").value);
-  const wSp = safeNum($("wSp").value);
-  const wCol = safeNum($("wCol").value);
+  const wLev = safeNum($("wLev")?.value);
+  const wCF = safeNum($("wCF")?.value);
+  const wSp = safeNum($("wSp")?.value);
+  const wCol = safeNum($("wCol")?.value);
   const wSum = Math.max(1, wLev+wCF+wSp+wCol);
 
   const levScore = scoreLeverage({prod, ltv, cltv, ltc, lienPos});
@@ -593,17 +666,17 @@ function calc(){
   const rating = toRating(composite);
   const rec = recommend({prod, dscrStb, stDSCR, ltv, ltc, forcedCoverage, globalWithDeal, rating, titleOk, zoning, phaseRes, insOk, appRev});
 
-  $("hdrRec").textContent = rec.status;
-  $("hdrRisk").textContent = `${rating.code} (${Math.round(composite)})`;
+  if($("hdrRec")) $("hdrRec").textContent = rec.status;
+  if($("hdrRisk")) $("hdrRisk").textContent = `${rating.code} (${Math.round(composite)})`;
 
   // Build Auto Conditions (baseline)
-  const autoConds = buildConditions({prod, recourse:$("recourse").value, lienPos, titleOk, zoning, phaseRes, insOk, appRev, permits:$("permits").value});
-  if(!$("conds").value.trim()) $("conds").value = autoConds.join("\n");
+  const autoConds = buildConditions({prod, recourse:$("recourse")?.value, lienPos, titleOk, zoning, phaseRes, insOk, appRev, permits:$("permits")?.value});
+  if($("conds") && !$("conds").value.trim()) $("conds").value = autoConds.join("\n");
 
   // Render all page KPIs
   renderCompleteness({loanAmt, asIs, stbGrossRent, pfsCash, takeoutRate, titleOk});
   renderPayments({loanAmt, noteRate, amortY, termMo, ioMo, dsAnnual, annIO, annAm});
-  renderEconomics({income, cofCost, netLender, roa, coc, targetROA:safeNum($("targetROA").value), targetCoC:safeNum($("targetCoC").value)});
+  renderEconomics({income, cofCost, netLender, roa, coc, targetROA:safeNum($("targetROA")?.value), targetCoC:safeNum($("targetCoC")?.value)});
   renderSU({sources, totalUses, gap, contingency, contPct, stUses, stLTC});
   renderMarket({liqScore, tts, pipeline, mktVacTrend});
   renderHist({grossIncome, egi, opEx, noi, dsAnnual, dscrHist, breakeven});
@@ -619,13 +692,13 @@ function calc(){
   renderDiligence({titleOk, zoning, phaseRes, insOk, appRev});
   renderRating({levScore, cfScore, spScore, colScore, composite, rating});
   renderPricingGuide({rating});
-  renderRatingNarr({rating, rec, ltv, ltc, dscrStb, dyStb, forcedCoverage, globalWithDeal});
-  renderMonitoringNarr({rec, covDSCR:safeNum($("covDSCR").value), covLTV:safeNum($("covLTV").value), sweep:safeNum($("sweepDSCR").value)});
+  renderRatingNarr({rating, rec, composite, ltv, ltc, dscrStb, dyStb, forcedCoverage, globalWithDeal});
+  renderMonitoringNarr({rec, covDSCR:safeNum($("covDSCR")?.value), covLTV:safeNum($("covLTV")?.value), sweep:safeNum($("sweepDSCR")?.value)});
   renderOutputs({deal, prod, rec, rating, loanAmt, termMo, ioMo, noteRate, points, ltv, ltvStb, cltv, cltvStb, ltc,
                  noi, stbNOI, dsAnnual, dscrHist, dscrStb, stDSCR, dyStb, breakeven,
                  exitValue, netSale, saleCoverage, impliedSaleLoss, maxTakeout, takeoutLTV,
                  forcedCoverage, forcedLoss, globalWithDeal, adjLiq, adjNW, liqAfterBurn, liqBurn, autoConds});
-  renderQuality({deal, loanAmt, asIs, stbNOI, takeoutDSCR, maxTakeout, titleOk, zoning, phaseRes, insOk, appRev, rating, rec, rentComps:$("rentComps").value, saleComps:$("saleComps").value, txNarr:$("txNarr").value});
+  renderQuality({deal, loanAmt, asIs, stbNOI, takeoutDSCR, maxTakeout, titleOk, zoning, phaseRes, insOk, appRev, rating, rec, rentComps:$("rentComps")?.value, saleComps:$("saleComps")?.value, txNarr:$("txNarr")?.value});
 
   // Save last calc snapshot
   last = { deal, prod, loanAmt, termMo, ioMo, noteRate, points, otherFees, exitFee, dsAnnual, noi, stbNOI, dscrStb, dyStb, ltv, ltc, exitValue, saleCoverage, forcedCoverage, composite, rating, rec };
@@ -740,9 +813,9 @@ function scoreCollateral(m){
 function toRating(score){
   // Example: 1-10 style
   if(score<=20) return {code:"1", desc:"Low Risk"};
-  if(score<=30) return {code:"2", desc:"Low‑Moderate"};
+  if(score<=30) return {code:"2", desc:"Low-Moderate"};
   if(score<=40) return {code:"3", desc:"Moderate"};
-  if(score<=50) return {code:"4", desc:"Moderate‑Elevated"};
+  if(score<=50) return {code:"4", desc:"Moderate-Elevated"};
   if(score<=60) return {code:"5", desc:"Elevated"};
   if(score<=70) return {code:"6", desc:"High"};
   if(score<=80) return {code:"7", desc:"Very High"};
@@ -750,15 +823,15 @@ function toRating(score){
 }
 function recommend(m){
   // Conservative gating
-  const minDSCR = safeNum($("policyMinDSCR").value);
+  const minDSCR = safeNum($("policyMinDSCR")?.value);
   let status="Approve";
   const rationale=[];
   if(m.rating.code>="7"){ status="Decline"; rationale.push("Composite risk rating exceeds tolerance."); }
   else if(m.rating.code>="6"){ status="Approve with Conditions"; rationale.push("High risk rating; tighten leverage/reserves/controls."); }
   else if(m.rating.code>="5"){ status="Approve with Conditions"; rationale.push("Elevated risk rating; require mitigants."); }
 
-  if(m.prod==="dscr" && m.dscrStb < Math.max(minDSCR,1.15)){ status="Decline"; rationale.push("Stabilized DSCR below policy minimum for cash‑flow lending."); }
-  if(m.ltv>90 && m.prod!=="land"){ status="Decline"; rationale.push("As‑is leverage exceeds policy cap."); }
+  if(m.prod==="dscr" && m.dscrStb < Math.max(minDSCR,1.15)){ status="Decline"; rationale.push("Stabilized DSCR below policy minimum for cash-flow lending."); }
+  if(m.ltv>90 && m.prod!=="land"){ status="Decline"; rationale.push("As-is leverage exceeds policy cap."); }
   if(m.ltc>90){ status="Approve with Conditions"; rationale.push("High LTC; require additional equity or reserves."); }
   if(m.forcedCoverage<0.90){ status="Approve with Conditions"; rationale.push("Forced sale proceeds may not cover total debt net of workout costs."); }
   if(m.globalWithDeal<1.05){ status="Approve with Conditions"; rationale.push("Weak global cash flow reduces sponsor capacity under stress."); }
@@ -779,11 +852,11 @@ function recommend(m){
 }
 function buildConditions(m){
   const conds=[];
-  conds.push("Satisfactory third‑party valuation (Appraisal/BPO) supporting as‑is and stabilized assumptions.");
+  conds.push("Satisfactory third-party valuation (Appraisal/BPO) supporting as-is and stabilized assumptions.");
   conds.push("Title policy (loan policy) with required endorsements; no unacceptable exceptions; lender-approved settlement agent.");
   conds.push("Evidence of hazard/wind/flood (as applicable) with lender as mortgagee/additional insured; builder’s risk for construction.");
   if(m.prod==="construction"||m.prod==="fixflip"){
-    conds.push("Third‑party budget review; executed GC contract; lender-approved draw/inspection protocol with lien waivers each draw.");
+    conds.push("Third-party budget review; executed GC contract; lender-approved draw/inspection protocol with lien waivers each draw.");
     conds.push("Contingency held lender-controlled to cover overruns; minimum contingency per policy.");
     if(m.permits!=="yes") conds.push("Evidence of permits/entitlements sufficient to commence work prior to first draw.");
   }
@@ -801,10 +874,10 @@ function buildConditions(m){
    Renderers
 ========================================================= */
 function renderCompleteness(m){
-  // Core 6: loan amount, as-is value, stabilized rent, sponsor cash, takeout rate, title ok
+  if(!$("kpiCompleteness")) return;
   const k=[];
   k.push(kpiCard("Loan Amount", fmt$(m.loanAmt), tagFor(m.loanAmt, x=>x>0, x=>x>0), "required"));
-  k.push(kpiCard("As‑Is Value", fmt$(m.asIs), tagFor(m.asIs, x=>x>0, x=>x>0), "required"));
+  k.push(kpiCard("As-Is Value", fmt$(m.asIs), tagFor(m.asIs, x=>x>0, x=>x>0), "required"));
   k.push(kpiCard("Stabilized Rent", fmt$(m.stbGrossRent), tagFor(m.stbGrossRent, x=>x>0, x=>x>0), "required"));
   k.push(kpiCard("Sponsor Cash (PFS)", fmt$(m.pfsCash), tagFor(m.pfsCash, x=>x>0, x=>x>0), "required"));
   k.push(kpiCard("Takeout Rate", fmtPct(m.takeoutRate,2), tagFor(m.takeoutRate, x=>x>0, x=>x>0), "required"));
@@ -812,6 +885,7 @@ function renderCompleteness(m){
   $("kpiCompleteness").innerHTML = k.join("");
 }
 function renderPayments(m){
+  if(!$("kpiPayments")) return;
   const k=[];
   const mIO = m.annIO/12;
   const mAm = m.annAm/12;
@@ -822,6 +896,7 @@ function renderPayments(m){
   $("kpiPayments").innerHTML = k.join("");
 }
 function renderEconomics(m){
+  if(!$("kpiEconomics")) return;
   const k=[];
   k.push(kpiCard("Total Lender Income", fmt$(m.income), tagFor(m.income, x=>x>0, x=>x>0)));
   k.push(kpiCard("Cost of Funds", fmt$(m.cofCost), tagFor(m.cofCost, x=>x>=0, x=>x>=0)));
@@ -831,54 +906,61 @@ function renderEconomics(m){
   $("kpiEconomics").innerHTML = k.join("");
 }
 function renderSU(m){
+  if(!$("kpiSU")) return;
   const k=[];
   k.push(kpiCard("Total Uses", fmt$(m.totalUses), tagFor(m.totalUses, x=>x>0, x=>x>0)));
   k.push(kpiCard("Total Sources", fmt$(m.sources), tagFor(m.sources, x=>x>0, x=>x>0)));
-  k.push(kpiCard("Sources‑Uses Gap", fmt$(m.gap), tagFor(m.gap, x=>Math.abs(x)<=100, x=>Math.abs(x)<=5000), "must ≈ 0"));
-  k.push(kpiCard("Contingency", fmt$(m.contingency), tagFor(m.contingency, x=>x>=0.10*safeNum($("rehabBudget").value), x=>x>=0.05*safeNum($("rehabBudget").value)), "rule of thumb"));
+  k.push(kpiCard("Sources-Uses Gap", fmt$(m.gap), tagFor(m.gap, x=>Math.abs(x)<=100, x=>Math.abs(x)<=5000), "must ≈ 0"));
+  k.push(kpiCard("Contingency", fmt$(m.contingency), tagFor(m.contingency, x=>x>=0.10*safeNum($("rehabBudget")?.value), x=>x>=0.05*safeNum($("rehabBudget")?.value)), "rule of thumb"));
   k.push(kpiCard("Stress LTC", fmtPct(m.stLTC,1), tagFor(m.stLTC, x=>x<=80, x=>x<=90), "overrun case"));
   $("kpiSU").innerHTML = k.join("");
 
   const box=$("gapBox");
-  if(Math.abs(m.gap)>100){
-    box.style.display="block";
-    box.innerHTML = `<strong>Gap Detected:</strong> Sources (${fmt$(m.sources)}) do not equal Uses (${fmt$(m.totalUses)}). The gap is ${fmt$(m.gap)}. <br><br>
-    <em>Institutional note:</em> A deal with an unexplained gap is not ready for approval. Identify the exact source or reduce uses.`;
-  }else{
-    box.style.display="none";
+  if(box){
+    if(Math.abs(m.gap)>100){
+      box.style.display="block";
+      box.innerHTML = `<strong>Gap Detected:</strong> Sources (${fmt$(m.sources)}) do not equal Uses (${fmt$(m.totalUses)}). The gap is ${fmt$(m.gap)}. <br><br>
+      <em>Institutional note:</em> A deal with an unexplained gap is not ready for approval. Identify the exact source or reduce uses.`;
+    }else{
+      box.style.display="none";
+    }
   }
 }
 function renderMarket(m){
+  if(!$("kpiMarket")) return;
   const k=[];
   k.push(kpiCard("Liquidity Score", `${m.liqScore}/5`, tagFor(m.liqScore, x=>x<=2, x=>x<=3), "lower is better"));
-  k.push(kpiCard("Time‑to‑Sell", `${m.tts} mo`, tagFor(m.tts, x=>x<=6, x=>x<=9)));
+  k.push(kpiCard("Time-to-Sell", `${m.tts} mo`, tagFor(m.tts, x=>x<=6, x=>x<=9)));
   k.push(kpiCard("Supply Pipeline", escapeHtml(m.pipeline), tagFor(m.pipeline, x=>x==="Low", x=>x!=="High")));
   k.push(kpiCard("Vacancy Trend", escapeHtml(m.mktVacTrend), tagFor(m.mktVacTrend, x=>x==="Improving", x=>x==="Stable")));
   $("kpiMarket").innerHTML = k.join("");
 }
 function renderHist(m){
+  if(!$("kpiHist")) return;
   const k=[];
   k.push(kpiCard("Gross Income", fmt$(m.grossIncome), tagFor(m.grossIncome, x=>x>0, x=>x>0)));
   k.push(kpiCard("Effective Gross Income", fmt$(m.egi), tagFor(m.egi, x=>x>0, x=>x>0)));
   k.push(kpiCard("Operating Expenses", fmt$(m.opEx), tagFor(m.opEx, x=>x>=0, x=>x>=0)));
   k.push(kpiCard("NOI (Normalized)", fmt$(m.noi), tagFor(m.noi, x=>x>0, x=>x>=0)));
-  k.push(kpiCard("DSCR (In‑Place)", fmtX(m.dscrHist,2), tagFor(m.dscrHist, x=>x>=1.20, x=>x>=1.10)));
+  k.push(kpiCard("DSCR (In-Place)", fmtX(m.dscrHist,2), tagFor(m.dscrHist, x=>x>=1.20, x=>x>=1.10)));
   k.push(kpiCard("Breakeven Ratio", fmtPct(m.breakeven,1), tagFor(m.breakeven, x=>x<=80, x=>x<=90)));
   $("kpiHist").innerHTML = k.join("");
 }
 function renderPF(m){
+  if(!$("kpiPF")) return;
   const k=[];
   k.push(kpiCard("Stabilized NOI", fmt$(m.stbNOI), tagFor(m.stbNOI, x=>x>0, x=>x>=0)));
-  k.push(kpiCard("DSCR (Stabilized)", fmtX(m.dscrStb,2), tagFor(m.dscrStb, x=>x>=safeNum($("policyMinDSCR").value), x=>x>=safeNum($("policyMinDSCR").value)*0.92)));
+  k.push(kpiCard("DSCR (Stabilized)", fmtX(m.dscrStb,2), tagFor(m.dscrStb, x=>x>=safeNum($("policyMinDSCR")?.value), x=>x>=safeNum($("policyMinDSCR")?.value)*0.92)));
   k.push(kpiCard("Debt Yield (Stb)", fmtPct(m.dyStb,2), tagFor(m.dyStb, x=>x>=10, x=>x>=8)));
   k.push(kpiCard("Exit Value (Cons.)", fmt$(m.exitValue), tagFor(m.exitValue, x=>x>0, x=>x>0)));
   k.push(kpiCard("Sale Coverage", fmtX(m.saleCoverage,2), tagFor(m.saleCoverage, x=>x>=1.0, x=>x>=0.9)));
   k.push(kpiCard("Implied Sale Loss", fmt$(m.impliedSaleLoss), tagFor(m.impliedSaleLoss, x=>x<=0, x=>x<=0)));
-  k.push(kpiCard("Max Takeout Loan", fmt$(m.maxTakeout), tagFor(m.maxTakeout, x=>x>=safeNum($("loanAmount").value), x=>x>=safeNum($("loanAmount").value)*0.9)));
+  k.push(kpiCard("Max Takeout Loan", fmt$(m.maxTakeout), tagFor(m.maxTakeout, x=>x>=safeNum($("loanAmount")?.value), x=>x>=safeNum($("loanAmount")?.value)*0.9)));
   k.push(kpiCard("Takeout LTV", fmtPct(m.takeoutLTV,1), tagFor(m.takeoutLTV, x=>x<=70, x=>x<=75)));
   $("kpiPF").innerHTML = k.join("");
 }
 function renderProj(proj){
+  const el = $("projWrap"); if(!el) return;
   const tbl = `
     <table class="table">
       <thead><tr><th>Year</th><th class="right">Gross</th><th class="right">EGI</th><th class="right">OpEx</th><th class="right">NOI</th><th class="right">Debt Svc</th><th class="right">DSCR</th></tr></thead>
@@ -895,28 +977,32 @@ function renderProj(proj){
           </tr>`).join("")}
       </tbody>
     </table>`;
-  $("projWrap").innerHTML = tbl;
+  el.innerHTML = tbl;
 }
 function renderCarry(m){
+  if(!$("kpiCarry")) return;
   const k=[];
   k.push(kpiCard("Carry Months", `${m.carryMonths} mo`, tagFor(m.carryMonths, x=>x>=0, x=>x>=0)));
   k.push(kpiCard("Avg Balance", fmt$(m.avgBal), tagFor(m.avgBal, x=>x>=0, x=>x>=0)));
   k.push(kpiCard("Est. Interest Carry", fmt$(m.carryInterest), tagFor(m.carryInterest, x=>x>=0, x=>x>=0)));
   k.push(kpiCard("Est. Op Deficit", fmt$(m.carryDeficit), tagFor(m.carryDeficit, x=>x>=0, x=>x>=0)));
   k.push(kpiCard("Total Carry Need", fmt$(m.carryNeed), tagFor(m.carryNeed, x=>x>=0, x=>x>=0)));
-  k.push(kpiCard("Interest Reserve", fmt$(safeNum($("interestReserve").value)), tagFor(safeNum($("interestReserve").value), x=>x>=m.carryNeed, x=>x>=m.carryNeed*0.8)));
+  k.push(kpiCard("Interest Reserve", fmt$(safeNum($("interestReserve")?.value)), tagFor(safeNum($("interestReserve")?.value), x=>x>=m.carryNeed, x=>x>=m.carryNeed*0.8)));
   $("kpiCarry").innerHTML = k.join("");
 
   const w=$("carryWarn");
-  if(m.carryGap>0){
-    w.style.display="block";
-    w.innerHTML = `<strong>Reserve Gap:</strong> Estimated carry need ${fmt$(m.carryNeed)} exceeds interest reserve ${fmt$(safeNum($("interestReserve").value))} by ${fmt$(m.carryGap)}.
-      <br><br>Mitigants: (i) increase reserve, (ii) reduce leverage, (iii) shorten stabilization timeline, (iv) require sponsor liquidity covenant/top-up, or (v) require principal curtailment at milestones.`;
-  }else{
-    w.style.display="none";
+  if(w){
+    if(m.carryGap>0){
+      w.style.display="block";
+      w.innerHTML = `<strong>Reserve Gap:</strong> Estimated carry need ${fmt$(m.carryNeed)} exceeds interest reserve ${fmt$(safeNum($("interestReserve")?.value))} by ${fmt$(m.carryGap)}.
+        <br><br>Mitigants: (i) increase reserve, (ii) reduce leverage, (iii) shorten stabilization timeline, (iv) require sponsor liquidity covenant/top-up, or (v) require principal curtailment at milestones.`;
+    }else{
+      w.style.display="none";
+    }
   }
 }
 function renderSponsor(m){
+  if(!$("kpiSponsor")) return;
   const k=[];
   k.push(kpiCard("Gross Liquidity", fmt$(m.grossLiq), tagFor(m.grossLiq, x=>x>=250000, x=>x>=75000)));
   k.push(kpiCard("Adj. Liquidity", fmt$(m.adjLiq), tagFor(m.adjLiq, x=>x>=250000, x=>x>=75000), "haircutted"));
@@ -927,14 +1013,17 @@ function renderSponsor(m){
   $("kpiSponsor").innerHTML = k.join("");
 
   const w=$("sponsorWarn");
-  if(m.liqAfterBurn<75000 && safeNum($("loanAmount").value)>0){
-    w.style.display="block";
-    w.innerHTML = `<strong>Sponsor support risk:</strong> Liquidity after delay burn is estimated at ${fmt$(m.liqAfterBurn)}. Consider requiring: larger reserves, additional collateral, or tighter leverage.`;
-  }else{
-    w.style.display="none";
+  if(w){
+    if(m.liqAfterBurn<75000 && safeNum($("loanAmount")?.value)>0){
+      w.style.display="block";
+      w.innerHTML = `<strong>Sponsor support risk:</strong> Liquidity after delay burn is estimated at ${fmt$(m.liqAfterBurn)}. Consider requiring: larger reserves, additional collateral, or tighter leverage.`;
+    }else{
+      w.style.display="none";
+    }
   }
 }
 function renderGlobal(m){
+  if(!$("kpiGlobal")) return;
   const k=[];
   k.push(kpiCard("Global DSCR", fmtX(m.globalDSCR,2), tagFor(m.globalDSCR, x=>x>=1.20, x=>x>=1.10)));
   k.push(kpiCard("Global DSCR (w/ Deal)", fmtX(m.globalWithDeal,2), tagFor(m.globalWithDeal, x=>x>=1.15, x=>x>=1.05)));
@@ -942,6 +1031,7 @@ function renderGlobal(m){
   $("kpiGlobal").innerHTML = k.join("");
 }
 function renderGlobalSensitivity(m){
+  const el = $("globSens"); if(!el) return;
   const baseNoi=safeNum(m.globalNoi), baseDs=safeNum(m.globalDebtSvc), living=safeNum(m.living), other=safeNum(m.otherDebt), deal=safeNum(m.dsAnnual);
   const vac = [0, .05, .10];
   const rate = [0, .10, .20];
@@ -957,9 +1047,10 @@ function renderGlobalSensitivity(m){
     html += `</tr>`;
   });
   html += `</tbody></table>`;
-  $("globSens").innerHTML = html;
+  el.innerHTML = html;
 }
 function renderStress(m){
+  if(!$("kpiStress")) return;
   const k=[];
   k.push(kpiCard("Stress NOI", fmt$(m.stNOI), tagFor(m.stNOI, x=>x>0, x=>x>=0)));
   k.push(kpiCard("Stress Debt Service", fmt$(m.stDS), tagFor(m.stDS, x=>x>0, x=>x>0)));
@@ -973,12 +1064,12 @@ function renderStress(m){
   $("kpiStress").innerHTML = k.join("");
 }
 function renderMatrix(m){
+  const el = $("sensMatrix"); if(!el) return;
   const noi = safeNum(m.stbNOI);
   const loan = safeNum(m.loanAmt);
-  const rate = safeNum(m.noteRate)/100;
   const baseCap = safeNum(m.exitCapCons);
-  const capSteps = [-0.005, 0, 0.005, 0.01]; // +/- 50-100 bps
-  const noiSteps = [-0.10, 0, 0.10]; // NOI down/up
+  const capSteps = [-0.005, 0, 0.005, 0.01];
+  const noiSteps = [-0.10, 0, 0.10];
   let html=`<table class="table"><thead><tr><th>NOI \\ Cap</th>${capSteps.map(c=>`<th class="right">${fmtPct((baseCap+c)*100,2)}</th>`).join("")}</tr></thead><tbody>`;
   noiSteps.forEach(nc=>{
     const n = noi*(1+nc);
@@ -993,18 +1084,20 @@ function renderMatrix(m){
   });
   html += `</tbody></table>
     <div class="footerNote">Table shows <strong>Value / Loan</strong> under NOI & cap shifts. Below 1.00× indicates principal impairment risk unless sponsor support exists.</div>`;
-  $("sensMatrix").innerHTML = html;
+  el.innerHTML = html;
 }
 function renderStressNarr(m){
+  const el = $("stressNarr"); if(!el) return;
   const lines=[];
   if(m.stDSCR<1.0) lines.push("Under the defined downside case, stressed cash flow does not fully cover debt service, indicating reliance on sponsor support/reserves.");
   else lines.push("Under the defined downside case, stressed cash flow remains near/above debt service, providing some survivability buffer.");
   if(m.stSaleCoverage<1.0) lines.push("A stressed sale scenario implies potential principal impairment net of sales costs; structure should be tightened or additional support required.");
   if(m.forcedCoverage<0.9) lines.push("Forced sale analysis indicates elevated loss severity risk; this is a key private-credit failure mode.");
   if(m.liqAfterBurn<75000) lines.push("Sponsor liquidity after delay burn appears limited; require reserves/top-up covenants or reduce leverage.");
-  $("stressNarr").innerHTML = `<ul>${lines.map(x=>`<li>${escapeHtml(x)}</li>`).join("")}</ul>`;
+  el.innerHTML = `<ul>${lines.map(x=>`<li>${escapeHtml(x)}</li>`).join("")}</ul>`;
 }
 function renderDiligence(m){
+  if(!$("kpiDiligence")) return;
   const k=[];
   k.push(kpiCard("Title OK?", escapeHtml(m.titleOk), tagFor(m.titleOk, x=>x==="Yes", x=>x==="Unknown")));
   k.push(kpiCard("Zoning Verified?", escapeHtml(m.zoning), tagFor(m.zoning, x=>x==="Yes", x=>x==="Unknown")));
@@ -1020,14 +1113,17 @@ function renderDiligence(m){
   if(m.insOk==="No") warn.push("Insurance inadequate.");
   if(m.appRev==="No") warn.push("Appraisal not reviewed.");
   const w=$("dilWarn");
-  if(warn.length){
-    w.style.display="block";
-    w.innerHTML = `<strong>Diligence Flags:</strong> ${warn.map(escapeHtml).join(" ")}<br><br>Recommendation: condition approval on satisfactory resolution and document review.`;
-  }else{
-    w.style.display="none";
+  if(w){
+    if(warn.length){
+      w.style.display="block";
+      w.innerHTML = `<strong>Diligence Flags:</strong> ${warn.map(escapeHtml).join(" ")}<br><br>Recommendation: condition approval on satisfactory resolution and document review.`;
+    }else{
+      w.style.display="none";
+    }
   }
 }
 function renderRating(m){
+  if(!$("kpiRating")) return;
   const k=[];
   k.push(kpiCard("Leverage Score", `${Math.round(m.levScore)}`, tagFor(m.levScore, x=>x<=35, x=>x<=55)));
   k.push(kpiCard("Cash Flow Score", `${Math.round(m.cfScore)}`, tagFor(m.cfScore, x=>x<=35, x=>x<=55)));
@@ -1038,9 +1134,9 @@ function renderRating(m){
   $("kpiRating").innerHTML = k.join("");
 }
 function renderPricingGuide(m){
-  // simplistic guide (replace with your matrix)
+  if(!$("kpiPricingGuide")) return;
   const r = Number(m.rating.code);
-  const baseSpread = 6.0 + (r*0.5); // placeholder
+  const baseSpread = 6.0 + (r*0.5);
   const pts = 1.0 + Math.max(0,(r-3))*0.25;
   const html = [
     kpiCard("Suggested Spread (over COF)", fmtPct(baseSpread,2), tagFor(r, x=>x<=4, x=>x<=6), "advisory"),
@@ -1051,31 +1147,40 @@ function renderPricingGuide(m){
   $("kpiPricingGuide").innerHTML = html;
 }
 function renderRatingNarr(m){
+  const el = $("ratingNarr"); if(!el) return;
   const lines=[];
-  lines.push(`Composite rating is <strong>${m.rating.code}</strong> (${Math.round(m.rating?.code?Number(m.rating.code):0)}), based on leverage, cash flow, sponsor strength, and collateral liquidity.`);
+  // FIX: show composite, not rating code again
+  lines.push(`Composite rating is <strong>${m.rating.code}</strong> (${Math.round(m.composite)}), based on leverage, cash flow, sponsor strength, and collateral liquidity.`);
   lines.push(`Key quantitative metrics: LTV ${fmtPct(m.ltv,1)}, LTC ${fmtPct(m.ltc,1)}, DSCR (stabilized) ${fmtX(m.dscrStb,2)}, debt yield ${fmtPct(m.dyStb,2)}.`);
   if(m.forcedCoverage<1.0) lines.push(`Downside: forced sale coverage is ${fmtX(m.forcedCoverage,2)}, indicating ${m.forcedCoverage<0.9?"elevated":"moderate"} loss severity risk.`);
   if(m.globalWithDeal<1.10) lines.push(`Sponsor global DSCR with deal is ${fmtX(m.globalWithDeal,2)}, indicating limited capacity to support the loan under broader stress.`);
   if(m.rec.status!=="Approve") lines.push(`Recommendation is <strong>${escapeHtml(m.rec.status)}</strong> subject to conditions and structure tightening due to identified risks.`);
-  $("ratingNarr").innerHTML = `<ul>${lines.map(x=>`<li>${x}</li>`).join("")}</ul>`;
+  el.innerHTML = `<ul>${lines.map(x=>`<li>${x}</li>`).join("")}</ul>`;
 }
 function renderMonitoringNarr(m){
+  const el = $("monNarr"); if(!el) return;
   const lines=[];
-  lines.push(`Ongoing monitoring should include monthly rent roll: <strong>${escapeHtml($("monRR").value)}</strong>, quarterly financials: <strong>${escapeHtml($("qFin").value)}</strong>, and annual financials: <strong>${escapeHtml($("annFin").value)}</strong>.`);
+  lines.push(`Ongoing monitoring should include monthly rent roll: <strong>${escapeHtml($("monRR")?.value)}</strong>, quarterly financials: <strong>${escapeHtml($("qFin")?.value)}</strong>, and annual financials: <strong>${escapeHtml($("annFin")?.value)}</strong>.`);
   lines.push(`Covenants: minimum DSCR ${fmtX(m.covDSCR,2)}; maximum LTV ${fmtPct(m.covLTV,1)}; cash sweep trigger ${fmtX(m.sweep,2)}.`);
   if(m.rec.status!=="Approve") lines.push("Given elevated risks, require more frequent reporting and reserve top-ups if performance deteriorates.");
-  $("monNarr").innerHTML = `<ul>${lines.map(x=>`<li>${x}</li>`).join("")}</ul>`;
+  el.innerHTML = `<ul>${lines.map(x=>`<li>${x}</li>`).join("")}</ul>`;
 }
+
+/* =========================================================
+   Outputs + Memo + Quality
+   (unchanged from your original except small safety guards)
+========================================================= */
 function renderOutputs(o){
-  // Exec KPIs
+  if(!$("kpiExec")) return;
+
   const k=[];
-  const minDSCR = safeNum($("policyMinDSCR").value);
+  const minDSCR = safeNum($("policyMinDSCR")?.value);
   k.push(kpiCard("Recommendation", escapeHtml(o.rec.status), tagFor(o.rec.status, x=>x==="Approve", x=>x==="Approve with Conditions")));
   k.push(kpiCard("Risk Rating", `${o.rating.code} – ${escapeHtml(o.rating.desc)}`, tagFor(Number(o.rating.code), x=>x<=4, x=>x<=6)));
   k.push(kpiCard("Loan Amount", fmt$(o.loanAmt), tagFor(o.loanAmt, x=>x>0, x=>x>0)));
   k.push(kpiCard("Term / IO", `${o.termMo} / ${o.ioMo} mo`, tagFor(o.ioMo, x=>x>=o.termMo, x=>x>0)));
   k.push(kpiCard("Rate / Points", `${o.noteRate.toFixed(2)}% / ${o.points.toFixed(2)} pts`, tagFor(o.noteRate, x=>x>0, x=>x>0)));
-  k.push(kpiCard("LTV (As‑Is)", fmtPct(o.ltv,1), tagFor(o.ltv, x=>x<=70, x=>x<=80)));
+  k.push(kpiCard("LTV (As-Is)", fmtPct(o.ltv,1), tagFor(o.ltv, x=>x<=70, x=>x<=80)));
   k.push(kpiCard("LTC", fmtPct(o.ltc,1), tagFor(o.ltc, x=>x<=70, x=>x<=80)));
   k.push(kpiCard("DSCR (Stb)", fmtX(o.dscrStb,2), tagFor(o.dscrStb, x=>x>=minDSCR, x=>x>=minDSCR*0.92)));
   k.push(kpiCard("Debt Yield", fmtPct(o.dyStb,2), tagFor(o.dyStb, x=>x>=10, x=>x>=8)));
@@ -1084,7 +1189,6 @@ function renderOutputs(o){
   k.push(kpiCard("Global DSCR (w/ deal)", fmtX(o.globalWithDeal,2), tagFor(o.globalWithDeal, x=>x>=1.15, x=>x>=1.05)));
   $("kpiExec").innerHTML = k.join("");
 
-  // Risks/mitigants
   const risks=[], mits=[];
   if(o.ltv>80) risks.push("Elevated leverage increases loss severity risk.");
   else mits.push("Leverage within moderate range.");
@@ -1099,15 +1203,14 @@ function renderOutputs(o){
   if(o.globalWithDeal<1.05) risks.push("Weak global DSCR indicates limited sponsor backstop under stress.");
   else mits.push("Global cash flow indicates capacity to support debt.");
 
-  $("outRisks").innerHTML = (risks.length?risks:["No material risks identified beyond normal market volatility (based on provided inputs)."]).map(x=>`<li>${escapeHtml(x)}</li>`).join("");
-  $("outMitigants").innerHTML = (mits.length?mits:["Mitigants depend on final structure: reserves, draw controls, lower leverage, and verified exit."]).map(x=>`<li>${escapeHtml(x)}</li>`).join("");
+  if($("outRisks")) $("outRisks").innerHTML = (risks.length?risks:["No material risks identified beyond normal market volatility (based on provided inputs)."]).map(x=>`<li>${escapeHtml(x)}</li>`).join("");
+  if($("outMitigants")) $("outMitigants").innerHTML = (mits.length?mits:["Mitigants depend on final structure: reserves, draw controls, lower leverage, and verified exit."]).map(x=>`<li>${escapeHtml(x)}</li>`).join("");
 
-  // Exit summary
   const primary = (o.prod==="fixflip") ? "Sale upon renovation completion." :
                   (o.prod==="construction") ? "Sale or refinance upon CO and stabilization." :
                   (o.prod==="dscr") ? "Hold to maturity; refinance only if terms favorable." :
                   "Refinance to permanent debt upon stabilization; sale as secondary.";
-  $("outExit").innerHTML = `
+  if($("outExit")) $("outExit").innerHTML = `
     <div class="small">
       <div><span class="chip">Primary Exit</span> ${escapeHtml(primary)}</div>
       <div style="height:6px"></div>
@@ -1116,56 +1219,54 @@ function renderOutputs(o){
       <div><span class="chip">Takeout</span> Max takeout ${fmt$(o.maxTakeout)}; takeout LTV ${fmtPct(o.takeoutLTV,1)}</div>
     </div>`;
 
-  // Conditions list
-  $("outConds").innerHTML = o.autoConds.map(x=>`<li>${escapeHtml(x)}</li>`).join("");
-
-  // Memo (structured, longer)
-  $("memo").innerHTML = buildMemo(o);
+  if($("outConds")) $("outConds").innerHTML = (o.autoConds||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join("");
+  if($("memo")) $("memo").innerHTML = buildMemo(o);
 }
+
 function buildMemo(o){
   const date = new Date().toLocaleDateString();
-  const deal = escapeHtml($("dealName").value||"—");
-  const uw = escapeHtml($("underwriter").value||"—");
-  const entity = escapeHtml($("borrowerEntity").value||"—");
-  const guarantors = escapeHtml($("guarantors").value||"—");
-  const addr = escapeHtml($("propAddr").value||"—");
-    const submarket = escapeHtml($("submarket").value||"—");
-  const assetType = escapeHtml($("assetType").value||"—");
-  const purpose = escapeHtml($("loanPurpose").value||"—");
-  const narrative = escapeHtml($("txNarr").value||"");
-  const lienPos = escapeHtml($("lienPos").value||"—");
-  const recourse = escapeHtml($("recourse").value||"—");
+  const deal = escapeHtml($("dealName")?.value||"—");
+  const uw = escapeHtml($("underwriter")?.value||"—");
+  const entity = escapeHtml($("borrowerEntity")?.value||"—");
+  const guarantors = escapeHtml($("guarantors")?.value||"—");
+  const propAddr = escapeHtml($("propAddr")?.value||"—");
+  const submarket = escapeHtml($("submarket")?.value||"—");
+  const assetType = escapeHtml($("assetType")?.value||"—");
+  const purpose = escapeHtml($("loanPurpose")?.value||"—");
+  const narrative = escapeHtml($("txNarr")?.value||"");
+  const lienPos = escapeHtml($("lienPos")?.value||"—");
+  const recourse = escapeHtml($("recourse")?.value||"—");
 
-  const asIsVal = safeNum($("asIsValue").value);
-  const arvVal  = safeNum($("arvValue").value) || asIsVal;
+  const asIsVal = safeNum($("asIsValue")?.value);
+  const arvVal  = safeNum($("arvValue")?.value) || asIsVal;
 
-  const srcs = safeNum($("srcLoan").value) + safeNum($("sponsorEquity").value) + safeNum($("otherFin").value);
-  const usesOverride = safeNum($("totalUses").value);
-  const purchase = safeNum($("purchasePrice").value);
-  const borClosing = safeNum($("borClosing").value);
-  const rehab = safeNum($("rehabBudget").value);
-  const soft = safeNum($("softCosts").value);
-  const contPct = safeNum($("contPct").value)/100;
+  const srcs = safeNum($("srcLoan")?.value) + safeNum($("sponsorEquity")?.value) + safeNum($("otherFin")?.value);
+  const usesOverride = safeNum($("totalUses")?.value);
+  const purchase = safeNum($("purchasePrice")?.value);
+  const borClosing = safeNum($("borClosing")?.value);
+  const rehab = safeNum($("rehabBudget")?.value);
+  const soft = safeNum($("softCosts")?.value);
+  const contPct = safeNum($("contPct")?.value)/100;
   const contingency = rehab*contPct;
-  const estCarry = safeNum($("estCarry").value);
-  const leasing = safeNum($("leasingCosts").value);
+  const estCarry = safeNum($("estCarry")?.value);
+  const leasing = safeNum($("leasingCosts")?.value);
   const uses = (usesOverride>0) ? usesOverride : (purchase+borClosing+rehab+soft+contingency+estCarry+leasing);
 
-  const titleOk = escapeHtml($("titleOk").value||"Unknown");
-  const zoning = escapeHtml($("zoning").value||"Unknown");
-  const phaseRes = escapeHtml($("phaseRes").value||"Pending");
-  const insOk = escapeHtml($("insOk").value||"Unknown");
-  const appRev = escapeHtml($("appRev").value||"No");
+  const titleOk = escapeHtml($("titleOk")?.value||"Unknown");
+  const zoning = escapeHtml($("zoning")?.value||"Unknown");
+  const phaseRes = escapeHtml($("phaseRes")?.value||"Pending");
+  const insOk = escapeHtml($("insOk")?.value||"Unknown");
+  const appRev = escapeHtml($("appRev")?.value||"No");
 
-  const strengths = escapeHtml($("uwStrengths").value||"");
-  const weaknesses = escapeHtml($("uwWeaknesses").value||"");
-  const questions = escapeHtml($("uwQuestions").value||"");
-  const talking = escapeHtml($("uwTalking").value||"");
+  const strengths = escapeHtml($("uwStrengths")?.value||"");
+  const weaknesses = escapeHtml($("uwWeaknesses")?.value||"");
+  const questions = escapeHtml($("uwQuestions")?.value||"");
+  const talking = escapeHtml($("uwTalking")?.value||"");
 
   const risks = [];
   const mits = [];
 
-  const minDSCR = safeNum($("policyMinDSCR").value);
+  const minDSCR = safeNum($("policyMinDSCR")?.value);
   if(o.ltv>80) risks.push("Elevated leverage increases potential loss severity and reduces refinance flexibility.");
   else mits.push("Leverage within a moderate range based on current inputs.");
   if(o.ltc>80) risks.push("High LTC reduces buffer for cost overruns and execution delays.");
@@ -1179,7 +1280,7 @@ function buildMemo(o){
   if(o.globalWithDeal<1.05) risks.push("Sponsor global cash flow is thin; limited capacity to support the deal through stress.");
   else mits.push("Global cash flow indicates capacity to support the debt under moderate stress.");
 
-  const conds = ($("conds").value||"").split("\n").map(s=>s.trim()).filter(Boolean);
+  const conds = ($("conds")?.value||"").split("\n").map(s=>s.trim()).filter(Boolean);
 
   const section = (title, bodyHtml)=>`
     <div class="card" style="margin-bottom:12px">
@@ -1188,10 +1289,8 @@ function buildMemo(o){
     </div>`;
 
   const bullets = (arr)=> arr.length ? `<ul class="small">${arr.map(x=>`<li>${x}</li>`).join("")}</ul>` : `<div class="small">—</div>`;
-
   const fmtMaybe = (n)=> (n>0 ? fmt$(n) : "—");
 
-  // Committee-ready memo structure
   let memo = "";
 
   memo += section("1. Executive Credit Summary",
@@ -1227,9 +1326,9 @@ function buildMemo(o){
       <table class="table">
         <thead><tr><th>Uses</th><th class="right">Amount</th><th>Sources</th><th class="right">Amount</th></tr></thead>
         <tbody>
-          <tr><td>Purchase</td><td class="mono right">${fmtMaybe(purchase)}</td><td>Loan Proceeds</td><td class="mono right">${fmtMaybe(safeNum($("srcLoan").value))}</td></tr>
-          <tr><td>Borrower Closing</td><td class="mono right">${fmtMaybe(borClosing)}</td><td>Sponsor Equity</td><td class="mono right">${fmtMaybe(safeNum($("sponsorEquity").value))}</td></tr>
-          <tr><td>Hard Costs</td><td class="mono right">${fmtMaybe(rehab)}</td><td>Other Financing</td><td class="mono right">${fmtMaybe(safeNum($("otherFin").value))}</td></tr>
+          <tr><td>Purchase</td><td class="mono right">${fmtMaybe(purchase)}</td><td>Loan Proceeds</td><td class="mono right">${fmtMaybe(safeNum($("srcLoan")?.value))}</td></tr>
+          <tr><td>Borrower Closing</td><td class="mono right">${fmtMaybe(borClosing)}</td><td>Sponsor Equity</td><td class="mono right">${fmtMaybe(safeNum($("sponsorEquity")?.value))}</td></tr>
+          <tr><td>Hard Costs</td><td class="mono right">${fmtMaybe(rehab)}</td><td>Other Financing</td><td class="mono right">${fmtMaybe(safeNum($("otherFin")?.value))}</td></tr>
           <tr><td>Soft Costs</td><td class="mono right">${fmtMaybe(soft)}</td><td></td><td></td></tr>
           <tr><td>Contingency</td><td class="mono right">${fmtMaybe(contingency)}</td><td></td><td></td></tr>
           <tr><td>Interest Carry (est.)</td><td class="mono right">${fmtMaybe(estCarry)}</td><td></td><td></td></tr>
@@ -1245,14 +1344,14 @@ function buildMemo(o){
       <table class="table">
         <tbody>
           <tr><th>Address</th><td>${propAddr}</td><th>Submarket</th><td>${submarket}</td></tr>
-          <tr><th>Asset Type</th><td>${assetType}</td><th>Liquidity (1–5)</th><td class="mono">${escapeHtml($("liqScore").value||"—")}</td></tr>
+          <tr><th>Asset Type</th><td>${assetType}</td><th>Liquidity (1–5)</th><td class="mono">${escapeHtml($("liqScore")?.value||"—")}</td></tr>
           <tr><th>As-Is Value</th><td class="mono right">${fmt$(asIsVal)}</td><th>Stabilized/ARV</th><td class="mono right">${fmt$(arvVal)}</td></tr>
         </tbody>
       </table>
       <div class="hr"></div>
       <div><strong>Market support:</strong></div>
-      <div style="margin-top:6px"><em>Rent comps:</em> ${escapeHtml($("rentComps").value||"—")}</div>
-      <div style="margin-top:6px"><em>Sale comps:</em> ${escapeHtml($("saleComps").value||"—")}</div>
+      <div style="margin-top:6px"><em>Rent comps:</em> ${escapeHtml($("rentComps")?.value||"—")}</div>
+      <div style="margin-top:6px"><em>Sale comps:</em> ${escapeHtml($("saleComps")?.value||"—")}</div>
     </div>`);
 
   memo += section("5. Historical Performance (if applicable)",
@@ -1312,7 +1411,7 @@ function buildMemo(o){
         </tbody>
       </table>
       <div style="margin-top:8px"><strong>Diligence notes / conditions:</strong></div>
-      <div style="margin-top:6px">${escapeHtml($("legalConds").value||"—")}</div>
+      <div style="margin-top:6px">${escapeHtml($("legalConds")?.value||"—")}</div>
     </div>`);
 
   memo += section("10. Key Risks & Mitigants",
@@ -1327,7 +1426,7 @@ function buildMemo(o){
     `<div class="small">
       ${conds.length ? `<ul class="small">${conds.map(c=>`<li>${escapeHtml(c)}</li>`).join("")}</ul>` : "<em>No conditions provided.</em>"}
       <div class="hr"></div>
-      <div><strong>Reporting:</strong> Monthly rent roll: ${escapeHtml($("monRR").value)} · Quarterly financials: ${escapeHtml($("qFin").value)} · Annual financials: ${escapeHtml($("annFin").value)} · Construction reporting: ${escapeHtml($("constRpt").value)}</div>
+      <div><strong>Reporting:</strong> Monthly rent roll: ${escapeHtml($("monRR")?.value)} · Quarterly financials: ${escapeHtml($("qFin")?.value)} · Annual financials: ${escapeHtml($("annFin")?.value)} · Construction reporting: ${escapeHtml($("constRpt")?.value)}</div>
     </div>`);
 
   memo += section("12. Underwriter Notes (for committee discussion)",
@@ -1344,14 +1443,11 @@ function buildMemo(o){
   return memo;
 }
 
-/* =========================================================
-   File Quality / Feedback Engine
-========================================================= */
 function renderQuality(m){
+  const el = $("qualityFlags"); if(!el) return;
   const flags=[];
   const tips=[];
 
-  // Missing core items
   if(!m.deal || m.deal==="—") flags.push({lvl:"bad", txt:"Deal name is blank (audit trail / exports will be weak)."});
   if(m.loanAmt<=0) flags.push({lvl:"bad", txt:"Loan amount is not entered; downstream metrics are not meaningful."});
   if(m.asIs<=0) flags.push({lvl:"bad", txt:"As-is value is missing; leverage cannot be validated."});
@@ -1360,14 +1456,12 @@ function renderQuality(m){
   if(!m.rentComps || m.rentComps.trim().length<60) flags.push({lvl:"warn", txt:"Rent comp support is thin. Stabilized rents should be defensible."});
   if(!m.saleComps || m.saleComps.trim().length<60) flags.push({lvl:"warn", txt:"Sale comp / cap rate support is thin. Exit assumptions should be supported."});
 
-  // Diligence readiness
   if(m.titleOk==="No") flags.push({lvl:"bad", txt:"Title marked not acceptable. This is typically a gating issue."});
   if(m.zoning==="No") flags.push({lvl:"bad", txt:"Zoning/use not verified. Confirm prior to closing."});
   if(m.phaseRes==="RECs Identified") flags.push({lvl:"warn", txt:"Environmental RECs identified. Confirm mitigations / Phase II where needed."});
   if(m.insOk==="No") flags.push({lvl:"bad", txt:"Insurance not adequate. This is a closing requirement."});
   if(m.appRev==="No") flags.push({lvl:"warn", txt:"Appraisal not reviewed. Provide internal review and reconcile to underwriting."});
 
-  // Credit quality suggestions
   if(m.rec.status!=="Approve"){
     tips.push("Translate each key risk into an enforceable mitigant: lower leverage, reserves, covenants, cash management, or additional collateral.");
     tips.push("Tighten assumptions rather than trying to 'solve' with pricing. Private credit wins by avoiding loss severity, not by maximizing coupon.");
@@ -1399,7 +1493,7 @@ function renderQuality(m){
         ]).map(t=>`<li>${escapeHtml(t)}</li>`).join("")}
       </ul>
     </div>`;
-  $("qualityFlags").innerHTML = html;
+  el.innerHTML = html;
 }
 
 /* =========================================================
@@ -1412,34 +1506,35 @@ function wire(){
   });
 
   // Buttons
-  $("btnRecalc").addEventListener("click", calc);
-  $("btnSave").addEventListener("click", save);
-  $("btnExport").addEventListener("click", exportJSON);
-  $("btnImport").addEventListener("click", importJSON);
-  $("btnClear").addEventListener("click", clearAll);
-  $("btnPrint").addEventListener("click", () => {
-  // 1) Switch to Outputs mode (uses your existing buttons)
-  document.getElementById("btnModeOutputs")?.click();
+  $("btnRecalc")?.addEventListener("click", calc);
+  $("btnSave")?.addEventListener("click", save);
+  $("btnExport")?.addEventListener("click", exportJSON);
+  $("btnImport")?.addEventListener("click", importJSON);
+  $("btnClear")?.addEventListener("click", clearAll);
 
-  // 2) Activate Outputs page
-  showPage("p_outputs");
+  $("btnPrint")?.addEventListener("click", () => {
+    // 1) Switch to Outputs mode (uses your existing buttons)
+    $("btnModeOutputs")?.click();
 
-  // 3) Allow DOM + mode visibility to update
-  setTimeout(() => {
-    window.print();
-  }, 120);
-});
+    // 2) Activate Outputs page
+    showPage("p_outputs");
+
+    // 3) Allow DOM + mode visibility to update
+    setTimeout(() => {
+      window.print();
+    }, 120);
+  });
 
   // Tables
-  $("addRR").addEventListener("click", addRR);
-  $("sumRR").addEventListener("click", sumRR);
-  $("addGlob").addEventListener("click", addGlob);
-  $("sumGlob").addEventListener("click", sumGlob);
-  $("addDraw").addEventListener("click", addDraw);
-  $("evenDraw").addEventListener("click", evenDraw);
+  $("addRR")?.addEventListener("click", addRR);
+  $("sumRR")?.addEventListener("click", sumRR);
+  $("addGlob")?.addEventListener("click", addGlob);
+  $("sumGlob")?.addEventListener("click", sumGlob);
+  $("addDraw")?.addEventListener("click", addDraw);
+  $("evenDraw")?.addEventListener("click", evenDraw);
 
   // Product change -> defaults
-  $("loanProduct").addEventListener("change", (e)=>{
+  $("loanProduct")?.addEventListener("change", (e)=>{
     applyDefaults(e.target.value);
     calc();
   });
@@ -1460,84 +1555,29 @@ function wire(){
 
 function boot(){
   // Default dates
-  if(!$("uwDate").value) $("uwDate").value = todayISO();
-  if(!$("closeDate").value) $("closeDate").value = "";
+  if($("uwDate") && !$("uwDate").value) $("uwDate").value = todayISO();
+  if($("closeDate") && !$("closeDate").value) $("closeDate").value = "";
 
   // Load saved state if present
   const loaded = load();
-  if(!loaded){
+  if(!loaded && $("loanProduct")){
     applyDefaults($("loanProduct").value);
   }
 
   // Render empty tables if needed
   renderRR(); renderGlob(); renderDraws();
 
-  // Wire events and calc
+  // Wire events
   wire();
+
+  // Init mode AFTER nav/pages exist
+  if (UO_MODE?.init) UO_MODE.init();
+
+  // First calc
   calc();
 }
 
-boot();
-/* ===== Inputs vs Outputs Mode ===== */
-(function () {
-  const MODE_KEY = "uo_mode";
-
-  const INPUT_PAGES = new Set([
-    "p_deal",
-    "p_structure",
-    "p_sources",
-    "p_property",
-    "p_hist",
-    "p_proforma",
-    "p_construction",
-    "p_sponsor",
-    "p_global",
-    "p_stress",
-    "p_legal",
-    "p_rating",
-    "p_conditions"
-  ]);
-
-  const OUTPUT_PAGES = new Set([
-    "p_outputs",
-    "p_feedback"
-  ]);
-
-  function setMode(mode) {
-    mode = (mode === "outputs") ? "outputs" : "inputs";
-    const isInputs = mode === "inputs";
-
-    // Badge + button styling
-    const badge = document.getElementById("modeBadge");
-    const bIn = document.getElementById("btnModeInputs");
-    const bOut = document.getElementById("btnModeOutputs");
-    if (badge) badge.textContent = "Mode: " + (isInputs ? "Inputs" : "Outputs");
-    if (bIn) bIn.classList.toggle("active", isInputs);
-    if (bOut) bOut.classList.toggle("active", !isInputs);
-
-    // Sidebar: hide/show ONLY the real page nav buttons
-    document.querySelectorAll("#nav button[data-page]").forEach((btn) => {
-      const pageId = btn.getAttribute("data-page");
-      const show = isInputs ? INPUT_PAGES.has(pageId) : OUTPUT_PAGES.has(pageId);
-      btn.style.display = show ? "" : "none";
-      btn.classList.remove("active");
-    });
-
-     if (!document.querySelector("section.page.active")) showPage(isInputs ? "p_deal" : "p_outputs");
-
-    // Persist
-    try { localStorage.setItem(MODE_KEY, mode); } catch (e) {}
-  }
-
-  document.addEventListener("DOMContentLoaded", function () {
-    const bIn = document.getElementById("btnModeInputs");
-    const bOut = document.getElementById("btnModeOutputs");
-
-    if (bIn) bIn.addEventListener("click", () => setMode("inputs"));
-    if (bOut) bOut.addEventListener("click", () => setMode("outputs"));
-
-    let saved = "inputs";
-    try { saved = localStorage.getItem(MODE_KEY) || "inputs"; } catch (e) {}
-    setMode(saved);
-  });
-})();
+// IMPORTANT: run after DOM is ready (fixes null element crashes)
+document.addEventListener("DOMContentLoaded", () => {
+  boot();
+});
