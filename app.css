@@ -365,3 +365,14 @@ input:focus, select:focus, textarea:focus{
   /* Ensure content prints above watermark */
   .main, .printHeader{ position:relative; z-index:1; }
 }
+/* ===== PRINT OVERRIDES: force Outputs pages visible even if JS hid them inline ===== */
+@media print {
+  /* Show ONLY Outputs pages */
+  section.page { display: none !important; }
+  section.page#p_outputs,
+  section.page#p_feedback { display: block !important; }
+
+  /* Ensure outputs cards actually show */
+  #p_outputs .card,
+  #p_feedback .card { display: block !important; }
+}
